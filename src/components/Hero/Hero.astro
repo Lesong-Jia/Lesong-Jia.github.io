@@ -4,13 +4,13 @@
  * You'll want a mobile image, and a desktop image for this.
  */
 
-import Button from "@components/Button/Button.astro";
 import heroImage from "@images/hero-bg-min.jpg";
+import { Icon } from "astro-icon/components";
 import heroImageMobile from "@images/hero-bg-min.jpg";
 import { Image } from "astro:assets";
 ---
 
-<section id="hero" class="relative z-10 flex min-h-[100lvh] w-full">
+<section id="hero" class="relative z-10 flex min-h-[100lvh] w-full flex-col">
 	<!-- background image -->
 	<div class="absolute -z-10 h-full min-h-full w-full overflow-hidden">
 		<div class="absolute inset-0 bg-black/10"></div>
@@ -34,29 +34,33 @@ import { Image } from "astro:assets";
 	</div>
 
 	<!-- hero items -->
-	<div class="site-container relative w-full gap-10 py-44 text-center md:py-52 md:text-left">
+	<div class="site-container relative mt-auto w-full gap-10 pb-16 text-center md:pb-24">
 		<!-- Hero text -->
-		<div class="text-base-50 my-auto mr-auto max-w-[800px] flex-col">
+		<div class="text-base-50 my-auto mx-auto max-w-full flex-col">
 			<h1
-				class="font-heading-1 text-4xl font-semibold text-pretty drop-shadow-[0_2px_2px_rgba(0,0,0,0.4)] md:text-7xl md:leading-tight"
+				class="font-heading-1 text-4xl font-semibold text-pretty md:text-7xl md:leading-tight"
 			>
-				California Wedding Photography
+				“凡可说者，皆可说清”
 			</h1>
-			<p
-				class="mt-8 text-lg tracking-widest text-pretty drop-shadow-[0_1px_1px_rgba(0,0,0,0.2)] md:max-w-[550px] md:text-2xl"
+
+			<h2
+				class="mt-10 font-heading-2 text-3xl font-semibold text-pretty md:mt-8 md:text-6xl md:leading-tight"
 			>
-				Transform your wedding moments into lasting memories amidst California's majestic
-				landscapes.
-			</p>
-			<div class="mt-10 flex flex-wrap justify-center gap-4 md:justify-start">
-				<Button
-					variant="ghost"
-					arrow="right"
+				让我们一起探索自然人机交互的语言边界
+			</h2>
+
+			<div class="mt-10 flex justify-center">
+				<a
 					href="/#contact"
-					class="pl-0 text-xl text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.2)] md:text-3xl"
+					aria-label="向下滚动"
+					class="primary-focus inline-flex text-white opacity-90 transition hover:opacity-100"
 				>
-					Get a Quote
-				</Button>
+					<Icon
+						name="mynaui/arrow-long-right"
+						class="h-10 w-10 rotate-90 md:h-14 md:w-14"
+						aria-hidden="true"
+					/>
+				</a>
 			</div>
 		</div>
 	</div>

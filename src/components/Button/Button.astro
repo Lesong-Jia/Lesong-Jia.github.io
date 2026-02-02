@@ -13,7 +13,7 @@ interface Props {
 	href?: string; // the href to go to, ex "/posts/"
 	target?: string; // the target for the link, ex "_blank"
 	rel?: string; // the rel for the link, ex "noopener"
-	arrow?: "left" | "right" | "none";
+	arrow?: "left" | "right" | "down" | "up" | "none";
 	onclick?: any; // any onclick events
 	class?: string; // any additional classes
 	rest?: any; // catch-all for any additional parameters, such as "aria-label"
@@ -70,6 +70,20 @@ const {
 					aria-hidden="true"
 				/>
 			)}
+			{arrow === "down" && (
+				<Icon
+					name="mynaui/arrow-long-right"
+					class="h-[1.4em] w-[1.4em] rotate-90 transition-[transform]"
+					aria-hidden="true"
+				/>
+			)}
+			{arrow === "up" && (
+				<Icon
+					name="mynaui/arrow-long-right"
+					class="h-[1.4em] w-[1.4em] -rotate-90 transition-[transform]"
+					aria-hidden="true"
+				/>
+			)}
 		</a>
 	)
 }
@@ -112,6 +126,20 @@ const {
 				<Icon
 					name="mynaui/arrow-long-right"
 					class="h-[1.4em] w-[1.4em] transition-[transform]"
+					aria-hidden="true"
+				/>
+			)}
+			{arrow === "down" && (
+				<Icon
+					name="mynaui/arrow-long-right"
+					class="h-[1.4em] w-[1.4em] rotate-90 transition-[transform]"
+					aria-hidden="true"
+				/>
+			)}
+			{arrow === "up" && (
+				<Icon
+					name="mynaui/arrow-long-right"
+					class="h-[1.4em] w-[1.4em] -rotate-90 transition-[transform]"
 					aria-hidden="true"
 				/>
 			)}

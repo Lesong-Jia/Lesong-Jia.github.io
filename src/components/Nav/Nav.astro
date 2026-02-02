@@ -1,5 +1,4 @@
 ---
-import Button from "@components/Button/Button.astro";
 import MobileNav from "@components/Nav/MobileNav/MobileNav.astro";
 import NavDropdown from "@components/Nav/NavDropdown/NavDropdown.astro";
 import NavLink from "@components/Nav/NavLink.astro";
@@ -46,14 +45,6 @@ const { startStyle = "default", rest } = Astro.props as Props;
 							}
 						</ul>
 					</nav>
-					<Button
-						variant="secondary"
-						class=`nav__cta py-1 my-auto hidden md:block ${startStyle === "white" ? "data-[scrolled=true]:border-primary-200 data-[scrolled=true]:hover:border-primary-200/80" : "border-primary-200"}`
-						href="https://cosmicthemes.com/themes/horizon/"
-						data-scrolled="false"
-					>
-						Get Horizon
-					</Button>
 
 					<!-- mobile nav menu, only load on small screens where it is visible -->
 					<div class="md:hidden">
@@ -67,26 +58,21 @@ const { startStyle = "default", rest } = Astro.props as Props;
 
 <script>
 	let navbar: HTMLElement | null;
-	let navCTA: HTMLElement | null;
 
 	function scrollHandler() {
 		if (navbar) {
 			if (window.scrollY > 50) {
-				// if we have scrolled down the page a bit, adjust colors
 				navbar.classList.add("scrolled");
 				navbar.classList.remove("initial");
-				navCTA?.setAttribute("data-scrolled", "true");
 			} else {
 				navbar.classList.add("initial");
 				navbar.classList.remove("scrolled");
-				navCTA?.setAttribute("data-scrolled", "false");
 			}
 		}
 	}
 
 	function initNav() {
 		navbar = document.getElementById("nav__container");
-		navCTA = navbar?.querySelector(".nav__cta") as HTMLElement;
 		window.addEventListener("scroll", scrollHandler, { passive: true });
 	}
 

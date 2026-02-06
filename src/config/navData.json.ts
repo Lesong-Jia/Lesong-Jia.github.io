@@ -15,11 +15,11 @@ export type navItem = navLinkItem | navDropdownItem;
 const navConfig: navItem[] = [
 	{
 		text: "新闻",
-		link: "/",
+		link: "/news",
 	},
 	{
 		text: "研究项目",
-		link: "/portfolio/",
+		link: "/publications",
 	},
 	// {
 	// 	text: "实验室成员",
@@ -27,29 +27,21 @@ const navConfig: navItem[] = [
 	// },
 	{
 		text: "合作者",
-		link: "/#pricing",
+		link: "/collaborators",
 	},
-	// {
-	// 	text: "Pages",
-	// 	dropdown: [
-	// 		{
-	// 			text: "Portfolio",
-	// 			link: "/portfolio/couple-1/",
-	// 		},
-	// 		{
-	// 			text: "Legal",
-	// 			link: "/privacy-policy/",
-	// 		},
-	// 		{
-	// 			text: "Elements",
-	// 			link: "/elements/",
-	// 		},
-	// 		{
-	// 			text: "404",
-	// 			link: "/not-a-link/",
-	// 		},
-	// 	],
-	// },
+	{
+		text: "中文/EN",
+		dropdown: [
+			{
+				text: "English",
+				link: "/en/",
+			},
+			{
+				text: "中文",
+				link: "/zh/",
+			},
+		],
+	},
 ];
 
 export default navConfig;

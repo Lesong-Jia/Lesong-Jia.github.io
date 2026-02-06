@@ -1,0 +1,132 @@
+---
+/**
+ * 研究与发表：左侧标题，中间四个方向筛选按钮（选中态），右侧查看更多；列表每项左图右文
+ */
+import siteData from "@config/siteData.json";
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+
+const DIRECTION_ALL = "所有方向";
+const DIRECTIONS = [DIRECTION_ALL, "多模态交互", "态势感知", "虚拟与增强现实"] as const;
+
+const items = await getCollection("publications", ({ data }) => data.draft !== true);
+const sorted = items.sort((a, b) => b.data.year - a.data.year || a.data.order - b.data.order);
+
+function highlightAuthor(authors: string, name: string): (string | { bold: string })[] {
+	if (!name || !authors.includes(name)) return [authors];
+	const parts = authors.split(name);
+	const out: (string | { bold: string })[] = [];
+	parts.forEach((part, i) => {
+		out.push(part);
+		if (i < parts.length - 1) out.push({ bold: name });
+	});
+	return out;
+}
+---
+
+<section id="publications" class="site-container scroll-mt-10 pt-6 pb-10 md:pt-8 md:pb-12">
+	<div class="max-w-6xl">
+		<!-- 标题 -->
+		<div class="mb-6 md:mb-8">
+			<h2 class="h2 text-pretty uppercase">
+				研究项目
+			</h2>
+		</div>
+		<!-- 四个按钮 + 查看更多：同一行 -->
+		<div class="mb-8 flex flex-wrap items-center justify-between gap-6 md:mb-10">
+			<div class="flex flex-wrap items-center gap-x-6 gap-y-1">
+				{DIRECTIONS.map((d) => (
+					<button
+						type="button"
+						class="publication-filter -mb-px border-b-2 border-transparent pb-1.5 pt-0.5 text-sm text-base-500 transition-colors hover:text-base-800 data-[active=true]:border-base-900 data-[active=true]:text-base-900 data-[active=true]:font-medium"
+						data-direction={d}
+						data-active={d === DIRECTION_ALL ? "true" : "false"}
+					>
+						{d}
+					</button>
+				))}
+			</div>
+			<a href="/publications" class="text-sm text-base-600 underline underline-offset-2 hover:text-base-900">
+				查看更多
+			</a>
+		</div>
+
+		<!-- 列表：每项左图右文 -->
+		<ul class="space-y-4" aria-label="发表列表">
+			{sorted.map((entry) => {
+				const { title, venue, authors, doi, thumbnail, direction } = entry.data;
+				const doiUrl = doi ? `https://doi.org/${doi}` : "";
+				return (
+					<li
+						class="publication-item flex items-start gap-4 p-4 md:gap-6 md:p-5"
+						data-direction={direction}
+					>
+						<div class="h-28 w-28 shrink-0 overflow-hidden rounded-md bg-base-200 md:h-36 md:w-36">
+							{thumbnail ? (
+								<Image
+									src={thumbnail}
+									alt=""
+									width={288}
+									height={288}
+									class="h-full w-full object-cover"
+								/>
+							) : (
+								<div class="flex h-full w-full items-center justify-center text-base-400 text-xs">图</div>
+							)}
+						</div>
+						<div class="flex min-h-28 flex-1 flex-col justify-between min-w-0 md:min-h-36">
+							<div class="pt-0">
+								<h3 class="mt-0 font-heading-2 text-lg font-semibold text-base-900 md:text-xl">
+									{title}
+								</h3>
+								{venue && <p class="mt-1 text-sm text-base-600">{venue}</p>}
+								<p class="mt-1 text-sm text-base-600">
+									{highlightAuthor(authors, siteData.author.name).map((seg) =>
+										typeof seg === "string" ? seg : <strong>{seg.bold}</strong>
+									)}
+								</p>
+							</div>
+							{doiUrl && (
+								<p class="mt-2">
+									<a href={doiUrl} target="_blank" rel="noopener noreferrer" class="break-all text-sm text-base-600 underline underline-offset-2 hover:text-base-900">
+										{doiUrl}
+									</a>
+								</p>
+							)}
+						</div>
+					</li>
+				);
+			})}
+		</ul>
+	</div>
+</section>
+
+<script>
+	const filters = document.querySelectorAll<HTMLButtonElement>(".publication-filter");
+	const itemEls = document.querySelectorAll<HTMLElement>(".publication-item");
+
+	function setActive(button: HTMLButtonElement) {
+		filters.forEach((b) => b.setAttribute("data-active", b === button ? "true" : "false"));
+	}
+
+	function filter(dir: string) {
+		const showAll = dir === "所有方向";
+		itemEls.forEach((el) => {
+			const itemDir = el.dataset.direction;
+			el.style.display = showAll || itemDir === dir ? "" : "none";
+		});
+	}
+
+	filters.forEach((btn) => {
+		btn.addEventListener("click", () => {
+			const dir = btn.dataset.direction ?? "所有方向";
+			setActive(btn);
+			filter(dir);
+		});
+	});
+
+	// 初始：所有方向选中，显示全部
+	const allBtn = document.querySelector<HTMLButtonElement>('.publication-filter[data-direction="所有方向"]');
+	if (allBtn) setActive(allBtn);
+</script>

@@ -1,0 +1,223 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import siteData from "@config/siteData.json";
+import placeholderImage from "@images/Cover_V3.png";
+
+// 获取所有发表
+const allPublications = await getCollection("publications", ({ data }) => data.draft !== true);
+const sortedPublications = allPublications.sort((a, b) => b.data.year - a.data.year || a.data.order - b.data.order);
+
+// 高亮作者名字
+function highlightAuthor(authors: string, name: string): (string | { bold: string })[] {
+	if (!name || !authors.includes(name)) return [authors];
+	const parts = authors.split(name);
+	const out: (string | { bold: string })[] = [];
+	parts.forEach((part, i) => {
+		out.push(part);
+		if (i < parts.length - 1) out.push({ bold: name });
+	});
+	return out;
+}
+
+// 三个研究方向的内容
+const researchProjects = [
+	{
+		title: "多模态交互",
+		direction: "多模态交互",
+		image: placeholderImage,
+		content: `多模态交互研究致力于探索如何通过整合视觉、听觉、触觉等多种感官通道，创造更自然、更高效的人机交互体验。
+
+我们的研究重点包括：
+- 多模态输入融合技术
+- 跨模态交互设计
+- 自然语言与手势的协同交互
+- 多模态反馈机制
+
+通过结合深度学习、计算机视觉和自然语言处理技术，我们开发了多个原型系统，验证了多模态交互在提升用户体验方面的潜力。
+
+在具体应用方面，我们重点关注智能家居、自动驾驶、医疗辅助等场景。在这些领域中，用户往往需要同时处理多种信息源，传统的单一模态交互方式已经无法满足需求。多模态交互系统能够更好地理解用户的意图，提供更精准的反馈，从而显著提升交互效率和用户满意度。
+
+我们的研究成果已在多个国际顶级会议和期刊上发表，包括 CHI、UIST、TOCHI 等。未来，我们将继续探索多模态交互在更多领域的应用，推动这一技术的进一步发展。`,
+	},
+	{
+		title: "态势感知",
+		direction: "态势感知",
+		image: placeholderImage,
+		content: `态势感知研究关注如何帮助用户更好地理解和感知复杂环境中的动态信息，特别是在自动驾驶、无人机控制等关键应用场景中。
+
+主要研究方向：
+- 情境感知系统设计
+- 信息可视化与呈现
+- 认知负荷优化
+- 实时决策支持
+
+我们的工作旨在通过智能化的信息呈现和交互设计，帮助用户在复杂环境中快速、准确地做出决策。
+
+在自动驾驶领域，我们研究了驾驶员在接管过程中的认知状态变化，设计了多种信息呈现方式来帮助驾驶员快速理解当前交通状况。通过眼动追踪和生理信号监测，我们能够实时评估驾驶员的注意力水平和压力状态，从而在关键时刻提供适当的辅助信息。
+
+在无人机控制方面，我们开发了多无人机协同控制界面，通过空间化的信息呈现和直观的交互方式，帮助操作员同时管理多架无人机的任务。这些研究不仅提升了操作效率，还显著降低了操作错误率。
+
+我们的研究成果得到了工业界和学术界的广泛认可，相关论文发表在 HCII、MobileHCI 等国际会议上。`,
+	},
+	{
+		title: "虚拟与增强现实",
+		direction: "虚拟与增强现实",
+		image: placeholderImage,
+		content: `虚拟与增强现实研究探索如何将数字信息无缝融入物理世界，创造沉浸式的交互体验。
+
+研究内容涵盖：
+- AR/VR 交互技术
+- 空间计算与定位
+- 虚实融合界面设计
+- 沉浸式协作系统
+
+我们致力于开发创新的 AR/VR 应用，探索这些技术在教育、培训、远程协作等领域的应用潜力，推动下一代交互技术的发展。
+
+在教育领域，我们开发了基于 AR 的交互式学习系统，让学生能够通过增强现实技术直观地理解抽象概念。例如，在物理教学中，学生可以通过 AR 设备观察三维的电磁场分布，在化学实验中安全地操作虚拟的危险物质。这些应用不仅提高了学习兴趣，还显著提升了学习效果。
+
+在远程协作方面，我们研究了如何在虚拟空间中实现自然的多人协作。通过精确的手势识别和空间定位技术，团队成员可以在虚拟环境中像面对面一样进行交流和协作，打破了地理距离的限制。
+
+我们的研究还关注 AR/VR 技术在不同设备上的适配问题，包括智能手机、头戴式显示器和混合现实设备。通过优化渲染算法和交互设计，我们能够在不同性能的设备上提供流畅的体验。相关研究成果已在 ISMAR、VR 等国际会议上发表。`,
+	},
+];
+---
+
+<BaseLayout title="研究项目" description="研究项目。" navStartStyle="default">
+	<div class="site-container pt-24 pb-16 md:pt-36 md:pb-24">
+		<div class="mb-12 flex flex-wrap items-end justify-between gap-4">
+			<h1 class="h2 text-pretty uppercase">研究项目</h1>
+			<a
+				href="/"
+				class="text-sm text-base-600 underline underline-offset-2 hover:text-base-900"
+			>
+				返回主页
+			</a>
+		</div>
+
+		<div class="space-y-16">
+			{researchProjects.map((project) => (
+				<section class="flex flex-col gap-8 md:flex-row md:items-start">
+					<!-- 左侧图片 -->
+					<div class="w-full shrink-0 md:w-[32rem]">
+						<div class="aspect-[4/3] w-full overflow-hidden bg-base-200 md:h-[384px]">
+							<Image
+								src={project.image}
+								alt={project.title}
+								width={640}
+								height={480}
+								class="h-full w-full object-cover"
+							/>
+						</div>
+					</div>
+
+					<!-- 右侧文字内容（可滚动） -->
+					<div class="min-w-0 flex-1 flex flex-col md:h-[384px]">
+						<h2 class="mb-4 shrink-0 font-heading-2 text-2xl font-semibold text-base-900 md:text-3xl">
+							{project.title}
+						</h2>
+						<div class="markdown-content flex-1 pr-2 text-base-700">
+							{project.content.split("\n\n").map((paragraph) => (
+								<p class="mb-4 leading-relaxed last:mb-0">{paragraph}</p>
+							))}
+
+							{/* 相关发表列表 */}
+							{(() => {
+								const relatedPubs = sortedPublications.filter(
+									(entry) => entry.data.direction === project.direction,
+								);
+								if (relatedPubs.length === 0) return null;
+								return (
+									<div class="mt-8 border-t border-base-300 pt-6">
+										<h3 class="mb-4 font-heading-2 text-lg font-semibold text-base-900">
+											相关发表
+										</h3>
+										<ul class="space-y-4">
+											{relatedPubs.map((entry) => {
+												const { title, authors, venue, year, doi } = entry.data;
+												const doiUrl = doi ? `https://doi.org/${doi}` : "";
+												return (
+													<li class="text-sm">
+														<p class="leading-relaxed">
+															<span class="font-medium">
+																{highlightAuthor(authors, siteData.author.name).map((seg) =>
+																	typeof seg === "string" ? seg : <strong>{seg.bold}</strong>
+																)}
+															</span>. {title}.{" "}
+															{venue && <span class="italic">{venue}</span>}
+															{year && `, ${year}`}.
+														</p>
+														{doiUrl && (
+															<p class="mt-1">
+																<a
+																	href={doiUrl}
+																	target="_blank"
+																	rel="noopener noreferrer"
+																	class="text-base-600 underline underline-offset-2 hover:text-base-900"
+																>
+																	DOI: {doi}
+																</a>
+															</p>
+														)}
+													</li>
+												);
+											})}
+										</ul>
+									</div>
+								);
+							})()}
+						</div>
+					</div>
+				</section>
+			))}
+		</div>
+	</div>
+</BaseLayout>
+
+<style>
+	.markdown-content {
+		overflow-y: scroll;
+		scrollbar-width: thin;
+		scrollbar-color: transparent transparent;
+	}
+
+	.markdown-content:hover {
+		scrollbar-color: var(--color-base-400) transparent;
+	}
+
+	/* Webkit browsers (Chrome, Safari, Edge) */
+	.markdown-content::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	.markdown-content::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	.markdown-content::-webkit-scrollbar-thumb {
+		background-color: transparent;
+		border-radius: 3px;
+		transition: background-color 0.2s ease;
+	}
+
+	.markdown-content:hover::-webkit-scrollbar-thumb {
+		background-color: var(--color-base-400) !important;
+	}
+
+	.markdown-content::-webkit-scrollbar-thumb:hover {
+		background-color: var(--color-base-500) !important;
+	}
+
+	/* Firefox */
+	@-moz-document url-prefix() {
+		.markdown-content {
+			scrollbar-width: thin;
+			scrollbar-color: transparent transparent;
+		}
+
+		.markdown-content:hover {
+			scrollbar-color: var(--color-base-400) transparent;
+		}
+	}
+</style>

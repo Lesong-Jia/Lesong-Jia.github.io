@@ -1,0 +1,77 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+
+const newsItems = await getCollection("news", ({ data }) => data.draft !== true);
+// 按日期从新到旧排序，若日期相同则按 order
+const sorted = newsItems.sort(
+	(a, b) => b.data.date.getTime() - a.data.date.getTime() || a.data.order - b.data.order,
+);
+
+function getHref(entry: CollectionEntry<"news">) {
+	return entry.data.link ?? `/news/${entry.id}`;
+}
+
+function formatMeta(date: Date, author?: string) {
+	const dateStr = date.toLocaleDateString("zh-CN", { month: "short", day: "numeric", year: "numeric" });
+	return author ? `${author} · ${dateStr}` : dateStr;
+}
+---
+
+<BaseLayout title="相关新闻" description="与贾乐松相关的新闻与动态。" navStartStyle="default">
+	<div class="site-container pt-24 md:pt-36">
+		<div class="mx-auto max-w-6xl">
+			<div class="mb-12 flex flex-wrap items-end justify-between gap-4">
+				<h1 class="h2 text-pretty uppercase">相关新闻</h1>
+				<a
+					href="/"
+					class="text-sm text-base-600 underline underline-offset-2 hover:text-base-900"
+				>
+					返回主页
+				</a>
+			</div>
+			<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+				{sorted.map((entry) => {
+					const { title, description, heroImage, date, link, author } = entry.data;
+					const href = getHref(entry);
+					const isExternal = !!link;
+					const metaStr = formatMeta(date, author);
+					return (
+						<article class="flex flex-col overflow-hidden rounded-xl bg-base-50">
+							<a href={href} class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2" {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+								<div class="aspect-[4/3] w-full overflow-hidden rounded-t-xl rounded-b-xl bg-base-200">
+									{heroImage ? (
+										<Image
+											src={heroImage}
+											alt=""
+											width={800}
+											height={600}
+											class="h-full w-full object-cover"
+										/>
+									) : (
+										<div class="flex h-full w-full items-center justify-center text-base-500 text-sm">
+											暂无图片
+										</div>
+									)}
+								</div>
+								<div class="flex flex-1 flex-col pt-5 pr-5 pb-5 pl-0 text-left md:pt-6 md:pr-6 md:pb-6 md:pl-0">
+									<p class="text-sm text-base-500">
+										{metaStr}
+									</p>
+									<h2 class="mt-1.5 font-heading-2 text-xl font-bold text-base-900">
+										{title}
+									</h2>
+									<p class="mt-2 text-base text-base-600 line-clamp-2">
+										{description}
+									</p>
+								</div>
+							</a>
+						</article>
+					);
+				})}
+			</div>
+		</div>
+	</div>
+</BaseLayout>

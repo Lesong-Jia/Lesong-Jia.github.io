@@ -1,0 +1,73 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+const all = await getCollection("collaborators", ({ data }) => data.draft !== true);
+const sorted = all.sort((a, b) => a.data.order - b.data.order);
+
+// 按年份分组（最新的在上面）
+const PERIODS = ["2026", "2022-2025", "2019-2022"] as const;
+const grouped = PERIODS.map((period) => ({
+	period,
+	items: sorted.filter((entry) => entry.data.period === period),
+}));
+---
+
+<BaseLayout title="合作者" description="研究合作者与团队成员。" navStartStyle="default">
+	<div class="site-container pt-24 pb-16 md:pt-36 md:pb-24">
+		<div class="mx-auto max-w-6xl">
+			<div class="mb-12 flex flex-wrap items-end justify-between gap-4">
+				<h1 class="h2 text-pretty uppercase">合作者</h1>
+				<a
+					href="/"
+					class="text-sm text-base-600 underline underline-offset-2 hover:text-base-900"
+				>
+					返回主页
+				</a>
+			</div>
+
+			{grouped.map(({ period, items }) => {
+				if (items.length === 0) return null;
+				return (
+					<section class="mb-16 last:mb-0">
+						<h2 class="mb-8 font-heading-2 text-2xl font-semibold text-base-900">
+							{period}
+						</h2>
+						<div class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4">
+							{items.map((entry) => {
+								const { name, title, image } = entry.data;
+								return (
+									<a
+										href={`/collaborators/${entry.id}`}
+										class="flex flex-col focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
+									>
+										<div class="aspect-square w-full overflow-hidden bg-base-200">
+											{image ? (
+												<Image
+													src={image}
+													alt=""
+													width={320}
+													height={320}
+													class="h-full w-full object-cover"
+												/>
+											) : (
+												<div class="flex h-full w-full items-center justify-center text-base-400 text-sm">
+													照片
+												</div>
+											)}
+										</div>
+										<h3 class="mt-3 font-heading-2 text-base font-semibold text-base-900">
+											{name}
+										</h3>
+										<p class="mt-0.5 text-sm text-base-600">{title}</p>
+									</a>
+								);
+							})}
+						</div>
+					</section>
+				);
+			})}
+		</div>
+	</div>
+</BaseLayout>

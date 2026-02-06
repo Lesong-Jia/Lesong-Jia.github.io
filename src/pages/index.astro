@@ -1,26 +1,27 @@
 ---
-import About from "@components/About/About.astro";
-import Button from "@components/Button/Button.astro";
-import Contact from "@components/Contact/Contact.astro";
-import FeatureNumbers from "@components/Feature/FeatureNumbers.astro";
-// components
 import Hero from "@components/Hero/Hero.astro";
-import PortfolioThreeCards from "@components/Portfolio/PortfolioThreeCards.astro";
-import PricingThreeCards from "@components/Pricing/PricingThreeCards.astro";
-import Testimonials from "@components/Testimonials/Testimonials.astro";
-// data
+import SelfIntro from "@components/SelfIntro/SelfIntro.astro";
+import NewsSection from "@components/News/NewsSection.astro";
+import PublicationsSection from "@components/Publications/PublicationsSection.astro";
+import CollaboratorsSection from "@components/Collaborators/CollaboratorsSection.astro";
 import siteData from "@config/siteData.json";
-// layout
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { Image } from "astro:assets";
 ---
 
 <BaseLayout title={siteData.title} description={siteData.description} navStartStyle="white">
 	<Hero />
-	<FeatureNumbers />
-	<PortfolioThreeCards />
-	<Testimonials />
-	<PricingThreeCards />
-	<About />
-	<Contact />
+	<SelfIntro
+		title="关于我"
+		description="我是贾乐松，是匹兹堡大学的一名信息科学博士生，由杜娜博士指导。我的研究聚焦于人机交互，涵盖机器人、自动驾驶、多无人机协同以及增强/虚拟现实等应用场景。我的研究理念是在深入分析和建模用户行为的基础上，构建能够有效指导交互设计实践的理论框架。为此，我利用 Unity 和 Unreal 等引擎构建可控的模拟环境以支持不同的交互任务和活动，综合采集和分析用户的主观数据、行为数据以及生理信号以深入理解用户在复杂交互中的真实行为规律。"
+	>
+		<div class="description mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-base">
+			<span>+86 15051857337</span>
+			<span>lej50@pitt.edu</span>
+			<a href="https://scholar.google.com/citations?user=qw4JKHkAAAAJ" target="_blank" rel="noopener noreferrer" class="hover:opacity-80">Google Scholar</a>
+			<a href="/CV_LesongJia_CN.pdf" target="_blank" rel="noopener noreferrer" class="hover:opacity-80">Download My CV</a>
+		</div>
+	</SelfIntro>
+	<NewsSection />
+	<PublicationsSection />
+	<CollaboratorsSection />
 </BaseLayout>

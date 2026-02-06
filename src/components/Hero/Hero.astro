@@ -4,20 +4,20 @@
  * You'll want a mobile image, and a desktop image for this.
  */
 
-import heroImage from "@images/hero-bg-min.jpg";
+import heroImage from "@images/Cover_V3.png";
 import { Icon } from "astro-icon/components";
-import heroImageMobile from "@images/hero-bg-min.jpg";
+import heroImageMobile from "@images/Cover_V3.png";
 import { Image } from "astro:assets";
 ---
 
 <section id="hero" class="relative z-10 flex min-h-[100lvh] w-full flex-col">
 	<!-- background image -->
 	<div class="absolute -z-10 h-full min-h-full w-full overflow-hidden">
-		<div class="absolute inset-0 bg-black/10"></div>
+		<div class="absolute inset-0 bg-black/10" aria-hidden="true"></div>
 
 		<Image
 			src={heroImage}
-			class="hidden h-auto min-h-full w-full object-cover object-bottom sm:block"
+			class="hidden h-auto min-h-full w-full object-cover object-bottom brightness-101 sm:block"
 			alt="wedding"
 			aria-hidden="true"
 			loading="eager"
@@ -25,7 +25,7 @@ import { Image } from "astro:assets";
 		/>
 		<Image
 			src={heroImageMobile}
-			class="h-auto min-h-full w-full object-cover sm:hidden"
+			class="h-auto min-h-full w-full object-cover brightness-101 sm:hidden"
 			alt="wedding"
 			aria-hidden="true"
 			loading="eager"
@@ -49,18 +49,12 @@ import { Image } from "astro:assets";
 				让我们一起探索自然人机交互的语言边界
 			</h2>
 
-			<div class="mt-10 flex justify-center">
-				<a
-					href="/#contact"
-					aria-label="向下滚动"
-					class="primary-focus inline-flex text-white opacity-90 transition hover:opacity-100"
-				>
-					<Icon
-						name="mynaui/arrow-long-right"
-						class="h-10 w-10 rotate-90 md:h-14 md:w-14"
-						aria-hidden="true"
-					/>
-				</a>
+			<div class="mt-10 flex justify-center" aria-hidden="true">
+				<Icon
+					name="mynaui/arrow"
+					class="h-10 w-10 -rotate-0 text-white opacity-90 md:h-14 md:w-14"
+					aria-hidden="true"
+				/>
 			</div>
 		</div>
 	</div>

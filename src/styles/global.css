@@ -10,7 +10,6 @@
 
 /* other imports into specific layers */
 @import "./markdown-content.css" layer(components);
-@import "./buttons.css" layer(components);
 
 /* https://tailwindcss.com/docs/adding-custom-styles#using-css-and-layer */
 @layer base {

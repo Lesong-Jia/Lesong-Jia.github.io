@@ -1,10 +1,9 @@
 ---
-name: "Jane Doe"
-title: "Early Collaborator // Researcher"
+name: "Makayla Chang"
+title: "匹兹堡大学计算与信息学院本科生"
 image: ./photo.jpg
-period: "2019-2022"
-order: 8
-showOnHomepage: false
+period: "2022-今"
+order: 6
 ---
 
-Jane Doe 在项目早期阶段参与了数据收集和初步分析工作。
+研究兴趣包括社会计算与人机交互，业余从事摄影与设计。

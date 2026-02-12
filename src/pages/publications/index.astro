@@ -7,7 +7,30 @@ import placeholderImage from "@images/Cover_V3.png";
 
 // 获取所有发表
 const allPublications = await getCollection("publications", ({ data }) => data.draft !== true);
-const sortedPublications = allPublications.sort((a, b) => b.data.year - a.data.year || a.data.order - b.data.order);
+
+// 获取作者位次：1=一作, 2=二作, 3+=其他
+function getAuthorPosition(authors: string, authorName: string): number {
+	const authorList = authors.split(",").map((a) => a.trim());
+	// 检查完整名字匹配（支持 "Lesong Jia" 或 "Jia Lesong" 格式）
+	const index = authorList.findIndex((a) => {
+		const normalized = a.toLowerCase();
+		const nameParts = authorName.toLowerCase().split(" ");
+		// 检查是否包含名字的所有部分
+		return nameParts.every((part) => normalized.includes(part));
+	});
+	if (index === -1) return 999; // 未找到，排最后
+	if (index === 0) return 1; // 一作
+	if (index === 1) return 2; // 二作
+	return 3; // 其他位次
+}
+
+// 排序：先按作者位次（一作>二作>其他），再按年份（新的在前）
+const sortedPublications = allPublications.sort((a, b) => {
+	const posA = getAuthorPosition(a.data.authors, siteData.author.name);
+	const posB = getAuthorPosition(b.data.authors, siteData.author.name);
+	if (posA !== posB) return posA - posB; // 先按位次排序
+	return b.data.year - a.data.year; // 再按年份降序
+});
 
 // 高亮作者名字
 function highlightAuthor(authors: string, name: string): (string | { bold: string })[] {
@@ -21,73 +44,55 @@ function highlightAuthor(authors: string, name: string): (string | { bold: strin
 	return out;
 }
 
-// 三个研究方向的内容
+// 四个研究方向的内容
 const researchProjects = [
 	{
 		title: "多模态交互",
 		direction: "多模态交互",
 		image: placeholderImage,
-		content: `多模态交互研究致力于探索如何通过整合视觉、听觉、触觉等多种感官通道，创造更自然、更高效的人机交互体验。
+		content: `多模态交互研究致力于通过整合手势、语音、姿态等多种输入通道，创造更自然、高效的人机交互方式。
 
-我们的研究重点包括：
-- 多模态输入融合技术
-- 跨模态交互设计
-- 自然语言与手势的协同交互
-- 多模态反馈机制
+我们的工作涵盖手势识别与编码（如基于手部骨架的非轨迹手势识别、连续手部关节运动的离散语义、空中手势编码方法 DigCode）、语音与姿态融合交互（如 Speech+ Posture 在多屏与大屏场景下的应用），以及图形元素与手势阈值对交互行为的影响。相关成果发表在 International Journal of Human-Computer Studies、Sensors、Multimedia Tools and Applications、IHSI 等期刊与会议上。
 
-通过结合深度学习、计算机视觉和自然语言处理技术，我们开发了多个原型系统，验证了多模态交互在提升用户体验方面的潜力。
+我们关注多模态输入在真实场景中的可用性与表现，并持续探索其在大型交互界面与泛在计算环境中的应用潜力。`,
+	},
+	{
+		title: "机器人交互",
+		direction: "机器人交互",
+		image: placeholderImage,
+		content: `机器人交互研究关注人机协作中的情感调节、用户需求理解与辅助技术设计，旨在让机器人系统更贴合用户期望、更易用、更可信。
 
-在具体应用方面，我们重点关注智能家居、自动驾驶、医疗辅助等场景。在这些领域中，用户往往需要同时处理多种信息源，传统的单一模态交互方式已经无法满足需求。多模态交互系统能够更好地理解用户的意图，提供更精准的反馈，从而显著提升交互效率和用户满意度。
+在辅助技术方面，我们聚焦轮椅安装机械臂（WMRA）的功能与界面：通过用户访谈与原型测试，探究用户对语音控制自动化机械臂的期望、对反馈方式与信息呈现的偏好，以及手动控制时的反馈模态需求。相关成果获 HRI 最佳论文，并发表于 ICORR、HFES 等会议。
 
-我们的研究成果已在多个国际顶级会议和期刊上发表，包括 CHI、UIST、TOCHI 等。未来，我们将继续探索多模态交互在更多领域的应用，推动这一技术的进一步发展。`,
+在情感交互方面，我们研究机器人介导的情绪调节如何影响用户的情绪、决策与人机信任，包括共情与非共情调节策略在不同情境下的效果，以及基于视频与游戏模拟的实验方法。成果发表于 International Journal of Social Robotics、HFES 等期刊与会议。`,
 	},
 	{
 		title: "态势感知",
 		direction: "态势感知",
 		image: placeholderImage,
-		content: `态势感知研究关注如何帮助用户更好地理解和感知复杂环境中的动态信息，特别是在自动驾驶、无人机控制等关键应用场景中。
+		content: `态势感知研究关注用户在复杂动态环境中的理解与决策，重点包括自动驾驶接管场景中的驾驶员态势感知，以及无人机监控中的操作员态势感知与人机协同。
 
-主要研究方向：
-- 情境感知系统设计
-- 信息可视化与呈现
-- 认知负荷优化
-- 实时决策支持
+在自动驾驶方面，我们研究接管过程中驾驶员对周围车辆的态势感知、交通条件与接管表现的关系，以及多模态数据（生理与情境）与机器学习对驾驶员态势感知的预测；并探讨信息类型、解释方式与系统错误如何影响用户信任与态势感知，以及关键性自适应显示的设计与评估。成果发表于 CHI、International Journal of Human–Computer Interaction、IEEE Transactions on Human-Machine Systems、Transportation Research Part F、HFES 等。
 
-我们的工作旨在通过智能化的信息呈现和交互设计，帮助用户在复杂环境中快速、准确地做出决策。
-
-在自动驾驶领域，我们研究了驾驶员在接管过程中的认知状态变化，设计了多种信息呈现方式来帮助驾驶员快速理解当前交通状况。通过眼动追踪和生理信号监测，我们能够实时评估驾驶员的注意力水平和压力状态，从而在关键时刻提供适当的辅助信息。
-
-在无人机控制方面，我们开发了多无人机协同控制界面，通过空间化的信息呈现和直观的交互方式，帮助操作员同时管理多架无人机的任务。这些研究不仅提升了操作效率，还显著降低了操作错误率。
-
-我们的研究成果得到了工业界和学术界的广泛认可，相关论文发表在 HCII、MobileHCI 等国际会议上。`,
+在无人机方面，我们研究多无人机监控中的态势感知（环境复杂度、界面设计与人类–AI 差异）、固定翼无人机监视中的人类知觉边界、目标显眼性，以及面向分布式数据流的态势理论与查询生成。成果发表于 IJHCI、ICHMS 等。`,
 	},
 	{
 		title: "虚拟与增强现实",
 		direction: "虚拟与增强现实",
 		image: placeholderImage,
-		content: `虚拟与增强现实研究探索如何将数字信息无缝融入物理世界，创造沉浸式的交互体验。
+		content: `虚拟与增强现实研究关注虚拟环境中的输入与交互设计，以及用户注意与行为建模，以提升 VR 中的操作效率与体验。
 
-研究内容涵盖：
-- AR/VR 交互技术
-- 空间计算与定位
-- 虚实融合界面设计
-- 沉浸式协作系统
+我们的工作包括：虚拟环境中按钮尺寸与徒手点击表现、徒手三维目标选择技术的可用性比较、手指点击交互任务的建模与评估；徒手点击与键盘控制在虚拟按钮选择任务中的眼动行为差异；手眼协调与徒手点击交互区域；以及基于多模态眼手数据预测用户在 VR 选择任务中的注意状态。相关成果发表在 Applied Sciences、Symmetry、Multimedia Tools and Applications、Electronics、Journal on Multimodal User Interfaces、IHSI、Human Systems Engineering and Design 等期刊与会议上。
 
-我们致力于开发创新的 AR/VR 应用，探索这些技术在教育、培训、远程协作等领域的应用潜力，推动下一代交互技术的发展。
-
-在教育领域，我们开发了基于 AR 的交互式学习系统，让学生能够通过增强现实技术直观地理解抽象概念。例如，在物理教学中，学生可以通过 AR 设备观察三维的电磁场分布，在化学实验中安全地操作虚拟的危险物质。这些应用不仅提高了学习兴趣，还显著提升了学习效果。
-
-在远程协作方面，我们研究了如何在虚拟空间中实现自然的多人协作。通过精确的手势识别和空间定位技术，团队成员可以在虚拟环境中像面对面一样进行交流和协作，打破了地理距离的限制。
-
-我们的研究还关注 AR/VR 技术在不同设备上的适配问题，包括智能手机、头戴式显示器和混合现实设备。通过优化渲染算法和交互设计，我们能够在不同性能的设备上提供流畅的体验。相关研究成果已在 ISMAR、VR 等国际会议上发表。`,
+我们致力于从交互技术与用户行为两方面推进 VR 界面的可用性与自适应设计。`,
 	},
 ];
 ---
 
-<BaseLayout title="研究项目" description="研究项目。" navStartStyle="default">
+<BaseLayout title="研究方向" description="研究方向。" navStartStyle="default">
 	<div class="site-container pt-24 pb-16 md:pt-36 md:pb-24">
 		<div class="mb-12 flex flex-wrap items-end justify-between gap-4">
-			<h1 class="h2 text-pretty uppercase">研究项目</h1>
+			<h1 class="h2 text-pretty uppercase">研究方向</h1>
 			<a
 				href="/"
 				class="text-sm text-base-600 underline underline-offset-2 hover:text-base-900"

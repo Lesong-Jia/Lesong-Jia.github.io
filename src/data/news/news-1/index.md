@@ -1,9 +1,12 @@
 ---
-title: "研究论文被 CHI 2025 接收"
-description: "关于自动驾驶情境下驾驶员接管行为的研究工作被人机交互顶会 CHI 2025 接收，将于今年在横滨进行汇报。"
+title: "论文 Understanding Situation Awareness in Multi-UAV Supervision 发表于 IJHCI"
+description: "我们的论文 Understanding Situation Awareness in Multi-UAV Supervision: Effects of Environmental Complexity, Interface Design, and Human–AI Differences 已正式发表于 JCR Q1 期刊 International Journal of Human–Computer Interaction。作者：Lesong Jia et al。"
 heroImage: ./cover.jpg
-date: "2025-01-15"
+date: "2026-02-10"
 order: 1
+link: "https://doi.org/10.1080/10447318.2026.2622580"
+acceptedBy: "IJHCI"
+paperTitle: "Understanding Situation Awareness in Multi-UAV Supervision: Effects of Environmental Complexity, Interface Design, and Human–AI Differences"
+authors: "Lesong Jia et al."
+abstract: "Situation Awareness (SA) is paramount for successful multi-Unmanned Aerial Vehicle (UAV) supervision, demanding operators to perform real-time cognitive integration of complex environmental dynamics and system states. However, most prior research has centered on system-oriented monitoring tasks, including tracking UAV positions and statuses, with comparatively limited attention to supporting users in interpreting environmental information from dynamic video feeds. To address this gap, we conducted a simulated wildfire monitoring study that systematically manipulated key environmental factors (e.g., target density, fire precedence) and interface factors (display layout and retrospective access). Building on these manipulations, we compared the performance of human operators and GPT-4o across object-specific (SPAM-based) and global (SAGAT-based) queries to assess their respective strengths.\n\nOur results revealed systematic patterns in human SA. Participants demonstrated significantly higher accuracy on object-specific tasks than on global queries, highlighting their strength in real-time perceptual processing and the challenges of memory-based reasoning. Across conditions, SA accuracy was lower at higher SA levels, under higher target density, and in the presence of event clustering, indicating increased perceptual and cognitive demands. At the same time, interface support in the form of centralized layouts and retrospective access demonstrated its effectiveness in mitigating cognitive load and enhancing SA accuracy.\n\nOur results also demonstrated complementary strengths between humans and GPT-4o, with GPT-4o outperforming human operators on global, pattern-based queries while humans outperformed GPT-4o in context-sensitive, object-level interpretation. These findings offer actionable insights for designing adaptive multi-UAV interfaces that support users' cognitive constraints, enhance human–AI collaboration, and ultimately improve mission performance in dynamic and complex environments."
 ---
-
-本研究的核心贡献在于……

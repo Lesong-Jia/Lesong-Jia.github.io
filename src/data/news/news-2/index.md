@@ -1,9 +1,12 @@
 ---
-title: "参加 HCII 2024 并做口头报告"
-description: "在希腊雅典举行的 HCII 2024 国际会议上汇报了多无人机协同控制中的用户行为建模相关工作。"
-heroImage: ./cover.jpg
-date: "2024-07-20"
+title: "论文 How Humans Naturally Refer to Targets 被 CHI 2026 接收"
+description: "我们的论文 How Humans Naturally Refer to Targets: Understanding Multimodal Instruction Patterns in Human–Robot Interaction 已被人机交互顶会 CHI 2026 接收。作者：Lesong Jia, Makayla Chang, Na Du。"
+heroImage: ./cover.png
+date: "2026-01-18"
 order: 2
+link: "https://doi.org/10.1145/3772318.3790946"
+acceptedBy: "CHI 2026"
+paperTitle: "How Humans Naturally Refer to Targets: Understanding Multimodal Instruction Patterns in Human–Robot Interaction"
+authors: "Lesong Jia, Makayla Chang, Na Du"
+abstract: "Current multimodal instruction-recognition algorithms in human-robot interaction, developed largely from a purely technical perspective, remain rigid and incomplete in their use of human communicative cues. Therefore, a full understanding of how humans naturally refer to targets in interaction is central to enabling robots to interpret and act on user instructions. To investigate this, we collected multimodal behavior data from 30 participants who naturally instructed a robot for household tasks while we systematically varied target distance, direction, and local referent complexity.\n\nOur results show that speech instructions were often vague and lacked explicit target-position information. To resolve this ambiguity, multimodal cues are essential: gaze direction provides an order-of-magnitude improvement in target-localization accuracy, while hand pointing, head turns, and speech onset offer reliable temporal anchors for identifying target-directed gaze. We also found that speech patterns varied with distance and local referent complexity, whereas multimodal behaviors shifted with target direction, underscoring the need for context-adaptive recognition and interface design."
 ---
-
-会议期间与多位学者进行了深入交流……

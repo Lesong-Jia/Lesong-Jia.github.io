@@ -8,10 +8,34 @@ import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 
 const DIRECTION_ALL = "所有方向";
-const DIRECTIONS = [DIRECTION_ALL, "多模态交互", "态势感知", "虚拟与增强现实"] as const;
+const DIRECTIONS = [DIRECTION_ALL, "多模态交互", "机器人交互", "态势感知", "虚拟与增强现实"] as const;
 
-const items = await getCollection("publications", ({ data }) => data.draft !== true);
-const sorted = items.sort((a, b) => b.data.year - a.data.year || a.data.order - b.data.order);
+// 主页只显示勾选「在主页显示」的发表；研究方向页显示全部
+const items = await getCollection("publications", ({ data }) => data.draft !== true && data.showOnHomepage === true);
+
+// 获取作者位次：1=一作, 2=二作, 3+=其他
+function getAuthorPosition(authors: string, authorName: string): number {
+	const authorList = authors.split(",").map((a) => a.trim());
+	// 检查完整名字匹配（支持 "Lesong Jia" 或 "Jia Lesong" 格式）
+	const index = authorList.findIndex((a) => {
+		const normalized = a.toLowerCase();
+		const nameParts = authorName.toLowerCase().split(" ");
+		// 检查是否包含名字的所有部分
+		return nameParts.every((part) => normalized.includes(part));
+	});
+	if (index === -1) return 999; // 未找到，排最后
+	if (index === 0) return 1; // 一作
+	if (index === 1) return 2; // 二作
+	return 3; // 其他位次
+}
+
+// 排序：先按作者位次（一作>二作>其他），再按年份（新的在前）
+const sorted = items.sort((a, b) => {
+	const posA = getAuthorPosition(a.data.authors, siteData.author.name);
+	const posB = getAuthorPosition(b.data.authors, siteData.author.name);
+	if (posA !== posB) return posA - posB; // 先按位次排序
+	return b.data.year - a.data.year; // 再按年份降序
+});
 
 function highlightAuthor(authors: string, name: string): (string | { bold: string })[] {
 	if (!name || !authors.includes(name)) return [authors];
@@ -30,10 +54,10 @@ function highlightAuthor(authors: string, name: string): (string | { bold: strin
 		<!-- 标题 -->
 		<div class="mb-6 md:mb-8">
 			<h2 class="h2 text-pretty uppercase">
-				研究项目
+				研究方向与代表性发表
 			</h2>
 		</div>
-		<!-- 四个按钮 + 查看更多：同一行 -->
+		<!-- 五个按钮 + 查看更多：同一行 -->
 		<div class="mb-8 flex flex-wrap items-center justify-between gap-6 md:mb-10">
 			<div class="flex flex-wrap items-center gap-x-6 gap-y-1">
 				{DIRECTIONS.map((d) => (
@@ -62,14 +86,14 @@ function highlightAuthor(authors: string, name: string): (string | { bold: strin
 						class="publication-item flex items-start gap-4 p-4 md:gap-6 md:p-5"
 						data-direction={direction}
 					>
-						<div class="h-28 w-28 shrink-0 overflow-hidden rounded-md bg-base-200 md:h-36 md:w-36">
+						<div class="h-28 w-28 shrink-0 overflow-hidden rounded-md bg-white md:h-36 md:w-36">
 							{thumbnail ? (
 								<Image
 									src={thumbnail}
 									alt=""
 									width={288}
 									height={288}
-									class="h-full w-full object-cover"
+									class="h-full w-full object-contain"
 								/>
 							) : (
 								<div class="flex h-full w-full items-center justify-center text-base-400 text-xs">图</div>

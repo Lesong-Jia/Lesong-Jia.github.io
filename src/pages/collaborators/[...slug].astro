@@ -16,29 +16,37 @@ export async function getStaticPaths() {
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 const entry = Astro.props as CollectionEntry<"collaborators">;
 const { Content } = await render(entry);
-const { name, title, image } = entry.data;
+const { name, title, image, link } = entry.data;
 ---
 
 <BaseLayout title={name} description={`${name}，${title}`} navStartStyle="default">
 	<article class="site-container pt-24 pb-16 md:pt-36 md:pb-24">
 		<div class="flex flex-col gap-8 md:flex-row md:items-start">
-			<div class="w-[28rem] shrink-0 overflow-hidden bg-base-200 md:w-[32rem]">
+			<div class="w-[28rem] shrink-0 overflow-hidden bg-transparent md:w-[32rem]">
 				{image ? (
 					<Image
 						src={image}
 						alt=""
-						width={512}
-						height={512}
+						width={1024}
+						height={1024}
+						quality={100}
 						class="aspect-square w-full object-cover"
 					/>
 				) : (
-					<div class="flex aspect-square w-full items-center justify-center text-base-400">照片</div>
+					<div class="aspect-square w-full bg-base-200" aria-hidden="true" />
 				)}
 			</div>
 			<div class="min-w-0 flex-1 flex flex-col md:h-[32rem]">
 				<div>
 					<h1 class="font-heading-1 text-2xl font-semibold text-base-900 md:text-3xl">{name}</h1>
 					<p class="mt-1 text-base text-base-600">{title}</p>
+					{link && (
+						<p class="mt-2">
+							<a href={link} target="_blank" rel="noopener noreferrer" class="text-sm text-base-600 underline underline-offset-2 hover:text-base-900">
+								个人主页
+							</a>
+						</p>
+					)}
 					<div class="markdown-content mt-6 text-base-700">
 						<Content />
 					</div>

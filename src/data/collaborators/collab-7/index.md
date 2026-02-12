@@ -1,10 +1,9 @@
 ---
-name: "John Smith"
-title: "Early Collaborator // Professor"
+name: "Yang Ye"
+title: "四川大学匹兹堡学院本科生"
 image: ./photo.jpg
-period: "2019-2022"
-order: 7
-showOnHomepage: false
+period: "2022-今"
+order: 9
 ---
 
-John Smith 是我在早期研究阶段的合作者，在项目初期提供了重要的指导和支持。
+研究兴趣包括人机交互、深度学习及人工智能的跨学科应用。

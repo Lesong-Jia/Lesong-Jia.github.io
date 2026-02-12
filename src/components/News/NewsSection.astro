@@ -13,10 +13,6 @@ const sorted = newsItems.sort(
 );
 const featured = sorted.slice(0, 3);
 
-function getHref(entry: CollectionEntry<"news">) {
-	return entry.data.link ?? `/news/${entry.id}`;
-}
-
 function formatMeta(date: Date, author?: string) {
 	const dateStr = date.toLocaleDateString("zh-CN", { month: "short", day: "numeric", year: "numeric" });
 	return author ? `${author} · ${dateStr}` : dateStr;
@@ -35,22 +31,26 @@ function formatMeta(date: Date, author?: string) {
 		</div>
 		<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
 			{featured.map((entry) => {
-				const { title, description, heroImage, date, author } = entry.data;
-				const href = getHref(entry);
-				const isExternal = !!entry.data.link;
+				const { description, heroImage, date, author, acceptedBy } = entry.data;
+				const cardTitle = acceptedBy
+	? acceptedBy.includes("最佳论文奖")
+		? `我们的论文获得了${acceptedBy.replace(/（最佳论文奖）/, "").trim()}最佳论文`
+		: `我们的论文被${acceptedBy}接收`
+	: entry.data.title;
 				const metaStr = formatMeta(date, author);
 				return (
 					<article class="flex flex-col overflow-hidden rounded-xl bg-base-50">
-						<a href={href} class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2" {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+						<a href={`/news/${entry.id}`} class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2">
 							<div class="aspect-[4/3] w-full overflow-hidden rounded-t-xl rounded-b-xl bg-base-200">
 								{heroImage ? (
-									<Image
-										src={heroImage}
-										alt=""
-										width={600}
-										height={450}
-										class="h-full w-full object-cover"
-									/>
+								<Image
+									src={heroImage}
+									alt=""
+									width={1200}
+									height={900}
+									quality={100}
+									class="h-full w-full object-cover"
+								/>
 								) : (
 									<div class="flex h-full w-full items-center justify-center text-base-500 text-sm">
 										暂无图片
@@ -62,7 +62,7 @@ function formatMeta(date: Date, author?: string) {
 									{metaStr}
 								</p>
 								<h3 class="mt-1.5 font-heading-2 text-lg font-bold text-base-900 md:text-xl">
-									{title}
+									{cardTitle}
 								</h3>
 								<p class="mt-2 text-base text-base-600 line-clamp-2">
 									{description}

@@ -16,36 +16,81 @@ export async function getStaticPaths() {
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 const entry = Astro.props as CollectionEntry<"news">;
 const { Content } = await render(entry);
-const { title, date, heroImage } = entry.data;
+const { title, description, date, heroImage, link, acceptedBy, paperTitle, authors, abstract } = entry.data;
 const dateStr = date.toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric" });
+const pageTitle = acceptedBy
+	? acceptedBy.includes("最佳论文奖")
+		? `我们的论文获得了${acceptedBy.replace(/（最佳论文奖）/, "").trim()}最佳论文`
+		: `我们的论文被${acceptedBy}接收`
+	: title;
+const abstractSingleLine = typeof abstract === "string" ? abstract.replace(/\s+/g, " ").trim() : "";
+const descriptionWithoutDate = description
+	.replace(/^\d{4}年\d{1,2}月\d{1,2}日[，、]\s*/, "")
+	.replace(/作者：[^。]*。\s*$/, "")
+	.trim();
 ---
 
-<BaseLayout title={title} description={entry.data.description} navStartStyle="default">
+<BaseLayout title={pageTitle} description={description} navStartStyle="default">
 	<article class="site-container pt-24 pb-16 md:pt-36 md:pb-24">
 		<div class="mx-auto max-w-3xl">
 			<header class="mb-8">
 				<time class="text-base text-base-500">{dateStr}</time>
 				<h1 class="mt-2 font-heading-1 text-3xl font-semibold text-pretty md:text-4xl">
-					{title}
+					{pageTitle}
 				</h1>
+				<p class="mt-4 text-base text-base-600">
+					{descriptionWithoutDate}
+				</p>
 			</header>
-			<div class="markdown-content text-base-700 max-w-none">
-				<Content />
-			</div>
 
 			{heroImage && (
-				<div class="mt-8">
+				<div class="mb-8">
 					<Image
 						src={heroImage}
 						alt=""
-						width={960}
-						height={720}
+						width={1920}
+						height={1440}
+						quality={100}
 						class="w-full h-auto"
 					/>
 				</div>
 			)}
+			<dl class="space-y-4 text-base-700">
+				{paperTitle && (
+					<div>
+						<dt class="text-sm font-medium text-base-500">论文题目</dt>
+						<dd class="mt-1">{paperTitle}</dd>
+					</div>
+				)}
+				{authors && (
+					<div>
+						<dt class="text-sm font-medium text-base-500">作者</dt>
+						<dd class="mt-1">{authors}</dd>
+					</div>
+				)}
+				{abstractSingleLine ? (
+					<div>
+						<dt class="text-sm font-medium text-base-500">摘要</dt>
+						<dd class="mt-1">{abstractSingleLine}</dd>
+					</div>
+				) : (
+					<div class="markdown-content max-w-none">
+						<Content />
+					</div>
+				)}
+			</dl>
 
-			<div class="mt-8 text-right">
+			<div class="mt-8 flex flex-wrap items-center justify-end gap-4">
+				{link && (
+					<a
+						href={link}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="text-sm text-base-600 underline underline-offset-2 hover:text-base-900"
+					>
+						阅读全文
+					</a>
+				)}
 				<a
 					href="/news"
 					class="text-sm text-base-600 underline underline-offset-2 hover:text-base-900"

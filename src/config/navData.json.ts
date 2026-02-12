@@ -18,7 +18,7 @@ const navConfig: navItem[] = [
 		link: "/news",
 	},
 	{
-		text: "研究项目",
+		text: "研究方向",
 		link: "/publications",
 	},
 	// {
@@ -26,7 +26,7 @@ const navConfig: navItem[] = [
 	// 	link: "/#pricing",
 	// },
 	{
-		text: "合作者",
+		text: "导师与合作者",
 		link: "/collaborators",
 	},
 	{

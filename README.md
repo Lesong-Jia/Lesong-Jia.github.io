@@ -18,7 +18,7 @@ src/
 │   ├── Hero/            # 首页 Hero 区块
 │   ├── Nav/             # 导航栏组件
 │   ├── News/            # 新闻区块组件
-│   ├── Publications/    # 研究项目区块组件
+│   ├── Publications/    # 研究方向区块组件
 │   ├── SelfIntro/       # 自我介绍区块
 │   ├── Seo/             # SEO 组件
 │   └── SiteLogo/        # Logo 组件
@@ -56,8 +56,8 @@ src/
 │   ├── news/           # 新闻页面
 │   │   ├── index.astro # 全部新闻列表
 │   │   └── [...slug].astro # 新闻详情页
-│   └── publications/   # 研究项目页面
-│       └── index.astro # 研究项目总览（三个研究方向）
+│   └── publications/   # 研究方向页面
+│       └── index.astro # 研究方向总览（三个研究方向）
 │
 ├── styles/             # 样式文件
 │   ├── global.css       # 全局样式

@@ -15,7 +15,7 @@ src/
 │   ├── Hero/              # 首页 Hero 区块
 │   ├── Nav/               # 导航栏
 │   ├── News/              # 新闻区块
-│   ├── Publications/      # 研究项目区块
+│   ├── Publications/      # 研究方向区块
 │   ├── SelfIntro/         # 自我介绍
 │   ├── Seo/               # SEO 优化
 │   └── SiteLogo/          # Logo
@@ -38,7 +38,7 @@ src/
 │   ├── 404.astro          # 404 页面
 │   ├── collaborators/     # 合作者页面
 │   ├── news/              # 新闻页面
-│   └── publications/      # 研究项目页面
+│   └── publications/      # 研究方向页面
 │
 └── styles/                # 样式文件
     ├── global.css         # 全局样式

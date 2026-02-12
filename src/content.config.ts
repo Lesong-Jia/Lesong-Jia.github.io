@@ -17,6 +17,12 @@ const news = defineCollection({
 			order: z.number(),
 			link: z.string().optional(),
 			draft: z.boolean().optional(),
+			// 卡片标题用「我们的论文被XX接收」，XX 填这里
+			acceptedBy: z.string().optional(),
+			// 详情页：论文题目、作者、摘要
+			paperTitle: z.string().optional(),
+			authors: z.string().optional(),
+			abstract: z.string().optional(),
 		}),
 });
 
@@ -35,8 +41,9 @@ const publications = defineCollection({
 			pdfUrl: z.string().optional(),
 			doi: z.string().optional(),
 			thumbnail: image().optional(),
-			direction: z.enum(["多模态交互", "态势感知", "虚拟与增强现实"]),
+			direction: z.enum(["多模态交互", "态势感知", "虚拟与增强现实", "机器人交互"]),
 			order: z.number(),
+			showOnHomepage: z.boolean().optional(),
 			draft: z.boolean().optional(),
 		}),
 });
@@ -52,7 +59,8 @@ const collaborators = defineCollection({
 			name: z.string(),
 			title: z.string(),
 			image: image().optional(),
-			period: z.enum(["2019-2022", "2022-2025", "2026"]),
+			link: z.string().optional(),
+			period: z.enum(["2019-2022", "2022-今"]),
 			order: z.number(),
 			showOnHomepage: z.boolean().optional(),
 			homepageOrder: z.number().optional(),

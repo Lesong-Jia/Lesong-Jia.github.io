@@ -1,10 +1,10 @@
 ---
-title: "Interaction Design for Augmented and Virtual Reality Applications"
-venue: "CHI 2023"
-authors: "Lesong Jia, Na Du, et al."
-year: 2023
-doi: "10.1145/3544548.3581567"
-thumbnail: ./thumb.jpg
-direction: 虚拟与增强现实
+title: "Study on hand--eye cordination area with bare-hand click interaction in virtual reality"
+authors: "Xiaozhou Zhou, Yu Jin, Lesong Jia, Chengqi Xue"
+venue: "Applied Sciences"
+year: 2021
+doi: "10.3390/app11136146"
+direction: "虚拟与增强现实"
 order: 5
+showOnHomepage: false
 ---

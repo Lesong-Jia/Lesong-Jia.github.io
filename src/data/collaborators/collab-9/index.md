@@ -1,10 +1,9 @@
 ---
-name: "Alex Chen"
-title: "Future Collaborator // PhD Student"
-image: ./photo.jpg
-period: "2026"
-order: 9
-showOnHomepage: false
+name: "杜晓茜"
+title: "东南大学博士候选人"
+image: ./photo.png
+period: "2022-今"
+order: 4
 ---
 
-Alex Chen 将在 2026 年加入我们的研究团队，专注于多模态交互方向的研究。
+擅长人机交互、多模态交互、虚拟现实、界面设计、眼动、感知与行动、协同决策等方向。

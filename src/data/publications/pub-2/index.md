@@ -1,10 +1,10 @@
 ---
-title: "Multimodal Interaction in Autonomous Driving Context"
-venue: "Proceedings of the ACM on Human-Computer Interaction"
-authors: "Lesong Jia, et al."
-year: 2024
-doi: "10.1145/3586183.3606762"
-thumbnail: ./thumb.jpg
-direction: 多模态交互
+title: "A modeling method to evaluate the finger-click interactive task in the virtual environment"
+authors: "Jiarui Li, Xiaozhou Zhou, Lesong Jia, Weiye Xiao, Yu Jin, Chengqi Xue"
+venue: "International Conference on Intelligent Human Systems Integration"
+year: 2021
+doi: "10.1007/978-3-030-68017-6_28"
+direction: "虚拟与增强现实"
 order: 2
+showOnHomepage: false
 ---

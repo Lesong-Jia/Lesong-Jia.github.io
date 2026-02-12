@@ -1,10 +1,11 @@
 ---
-title: "Designing Interactive Multimodal Information Retrieval and Access for Heads Up Computing (DIMIRA-HUC)"
-venue: "CHI 2025"
-authors: "Haiming Liu, Shengdong Zhao, Silang Wang, Preben Hansen, Ian Oakley, Khanh-Duy Le"
-year: 2025
-doi: "10.1145/3627535.3627550"
-thumbnail: ./thumb.jpg
-direction: 多模态交互
+title: "A study of button size for virtual hand interaction in virtual environments based on clicking performance"
+authors: "Xiaozhou Zhou, Yibing Guo, Lesong Jia, Yu Jin, Helu Li, Chengqi Xue"
+venue: "Multimedia Tools and Applications"
+year: 2023
+doi: "10.1007/s11042-022-14038-w"
+direction: "虚拟与增强现实"
 order: 1
+showOnHomepage: true
+thumbnail: ./pub1.png
 ---

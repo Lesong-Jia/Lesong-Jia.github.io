@@ -1,10 +1,10 @@
 ---
-title: "More Than Automation: User Insights into the Functionality and Interface of Wheelchair-Mounted Robotic Arms"
-venue: "ICUAS 2024"
-authors: "Lesong Jia, et al."
-year: 2024
-doi: "10.1109/ICUAS60882.2024.10557012"
-thumbnail: ./thumb.jpg
-direction: 态势感知
+title: "A comparative usability study of bare hand three-dimensional object selection techniques in virtual environment"
+authors: "Xiaozhou Zhou, Hao Qin, Weiye Xiao, Lesong Jia, Chengqi Xue"
+venue: "Symmetry"
+year: 2020
+doi: "10.3390/sym12101723"
+direction: "虚拟与增强现实"
 order: 4
+showOnHomepage: false
 ---

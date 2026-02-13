@@ -3,7 +3,10 @@ import { Image } from "astro:assets";
 import BaseLayout from "@layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 import siteData from "@config/siteData.json";
-import placeholderImage from "@images/Cover_V3.png";
+import directionMultimodal from "@images/direction-multimodal.png";
+import directionRobot from "@images/direction-robot.png";
+import directionSituation from "@images/direction-situation.png";
+import directionVr from "@images/direction-vr.png";
 
 // 获取所有发表
 const allPublications = await getCollection("publications", ({ data }) => data.draft !== true);
@@ -49,7 +52,9 @@ const researchProjects = [
 	{
 		title: "多模态交互",
 		direction: "多模态交互",
-		image: placeholderImage,
+		image: directionMultimodal,
+		imageSmall: true,
+		imageMaxSize: 88,
 		content: `多模态交互研究致力于通过整合手势、语音、姿态等多种输入通道，创造更自然、高效的人机交互方式。
 
 我们的工作涵盖手势识别与编码（如基于手部骨架的非轨迹手势识别、连续手部关节运动的离散语义、空中手势编码方法 DigCode）、语音与姿态融合交互（如 Speech+ Posture 在多屏与大屏场景下的应用），以及图形元素与手势阈值对交互行为的影响。相关成果发表在 International Journal of Human-Computer Studies、Sensors、Multimedia Tools and Applications、IHSI 等期刊与会议上。
@@ -59,7 +64,10 @@ const researchProjects = [
 	{
 		title: "机器人交互",
 		direction: "机器人交互",
-		image: placeholderImage,
+		image: directionRobot,
+		imageSmall: true,
+		imageMaxSize: 90,
+		imageOffsetDown: true,
 		content: `机器人交互研究关注人机协作中的情感调节、用户需求理解与辅助技术设计，旨在让机器人系统更贴合用户期望、更易用、更可信。
 
 在辅助技术方面，我们聚焦轮椅安装机械臂（WMRA）的功能与界面：通过用户访谈与原型测试，探究用户对语音控制自动化机械臂的期望、对反馈方式与信息呈现的偏好，以及手动控制时的反馈模态需求。相关成果获 HRI 最佳论文，并发表于 ICORR、HFES 等会议。
@@ -69,7 +77,7 @@ const researchProjects = [
 	{
 		title: "态势感知",
 		direction: "态势感知",
-		image: placeholderImage,
+		image: directionSituation,
 		content: `态势感知研究关注用户在复杂动态环境中的理解与决策，重点包括自动驾驶接管场景中的驾驶员态势感知，以及无人机监控中的操作员态势感知与人机协同。
 
 在自动驾驶方面，我们研究接管过程中驾驶员对周围车辆的态势感知、交通条件与接管表现的关系，以及多模态数据（生理与情境）与机器学习对驾驶员态势感知的预测；并探讨信息类型、解释方式与系统错误如何影响用户信任与态势感知，以及关键性自适应显示的设计与评估。成果发表于 CHI、International Journal of Human–Computer Interaction、IEEE Transactions on Human-Machine Systems、Transportation Research Part F、HFES 等。
@@ -79,7 +87,9 @@ const researchProjects = [
 	{
 		title: "虚拟与增强现实",
 		direction: "虚拟与增强现实",
-		image: placeholderImage,
+		image: directionVr,
+		imageSmall: true,
+		imageMaxSize: 97,
 		content: `虚拟与增强现实研究关注虚拟环境中的输入与交互设计，以及用户注意与行为建模，以提升 VR 中的操作效率与体验。
 
 我们的工作包括：虚拟环境中按钮尺寸与徒手点击表现、徒手三维目标选择技术的可用性比较、手指点击交互任务的建模与评估；徒手点击与键盘控制在虚拟按钮选择任务中的眼动行为差异；手眼协调与徒手点击交互区域；以及基于多模态眼手数据预测用户在 VR 选择任务中的注意状态。相关成果发表在 Applied Sciences、Symmetry、Multimedia Tools and Applications、Electronics、Journal on Multimodal User Interfaces、IHSI、Human Systems Engineering and Design 等期刊与会议上。
@@ -106,13 +116,14 @@ const researchProjects = [
 				<section class="flex flex-col gap-8 md:flex-row md:items-start">
 					<!-- 左侧图片 -->
 					<div class="w-full shrink-0 md:w-[32rem]">
-						<div class="aspect-[4/3] w-full overflow-hidden bg-base-200 md:h-[384px]">
+						<div class="aspect-[4/3] w-full overflow-hidden bg-white md:h-[384px] flex items-center justify-center">
 							<Image
 								src={project.image}
 								alt={project.title}
-								width={640}
-								height={480}
-								class="h-full w-full object-cover"
+								width={1280}
+								height={960}
+								quality={95}
+								class={project.imageSmall ? `h-full w-full max-h-[${project.imageMaxSize ?? 85}%] max-w-[${project.imageMaxSize ?? 85}%] object-contain ${project.imageOffsetDown ? "mt-1" : ""}` : "h-full w-full object-cover"}
 							/>
 						</div>
 					</div>

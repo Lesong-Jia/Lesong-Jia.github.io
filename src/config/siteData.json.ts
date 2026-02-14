@@ -1,5 +1,6 @@
 export interface SiteDataProps {
 	name: string;
+	nameEn?: string;
 	title: string;
 	description: string;
 	useViewTransitions?: boolean; // defaults to false. Set to true to enable some Astro 3.0 view transitions
@@ -15,6 +16,7 @@ export interface SiteDataProps {
 // Update this file with your site specific information
 const siteData: SiteDataProps = {
 	name: "贾乐松 | 匹兹堡大学信息科学博士生",
+	nameEn: "Lesong Jia | Ph.D. Student @ PITT.",
 	// Your website's title and description (meta fields)
 	title: "Lesong Jia",
 	description:

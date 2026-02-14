@@ -1,6 +1,7 @@
 ---
 title: "论文 Robots with Heart 发表于 International Journal of Social Robotics"
 description: "我们的论文 Robots with Heart: How Emotion Regulation Shapes Human-Robot Interaction 已正式发表于 SORO（International Journal of Social Robotics）。作者：Lesong Jia, Jackie Ayoub, Danyang Tian, Miao Song, Ehsan Moradi Pari, Na Du。"
+descriptionEn: "Our paper Robots with Heart: How Emotion Regulation Shapes Human-Robot Interaction has been published in the International Journal of Social Robotics (SORO)."
 heroImage: ./cover.png
 date: "2026-01-01"
 order: 3

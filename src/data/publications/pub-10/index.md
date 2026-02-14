@@ -6,5 +6,6 @@ year: 2022
 doi: "10.54941/ahfe100950"
 direction: "多模态交互"
 order: 10
-showOnHomepage: false
+showOnHomepage: true
+thumbnail: ./pub10.png
 ---

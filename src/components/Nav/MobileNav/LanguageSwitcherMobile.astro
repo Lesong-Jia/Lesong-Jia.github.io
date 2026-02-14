@@ -1,0 +1,17 @@
+---
+// 从 URL 路径中提取语言
+const currentLang = (Astro.url.pathname.startsWith("/en/") ? "en" : "zh") as "zh" | "en";
+const targetLang = currentLang === "zh" ? "en" : "zh";
+const targetLangText = currentLang === "zh" ? "English" : "中文";
+const currentLangText = currentLang === "zh" ? "中文" : "EN";
+const switchPath = `/${targetLang}${Astro.url.pathname.replace(/^\/(zh|en)/, "")}`;
+---
+
+<li>
+	<a
+		href={switchPath}
+		class="nav__link--base flex w-full items-center"
+	>
+		{currentLangText} / {targetLangText}
+	</a>
+</li>

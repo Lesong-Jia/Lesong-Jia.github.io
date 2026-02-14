@@ -39,7 +39,7 @@
 
 @layer components {
 	.h1 {
-		@apply font-heading-1 text-4xl font-semibold lg:text-5xl;
+		@apply font-heading-1 text-4xl font-medium lg:text-5xl;
 	}
 
 	.h2 {

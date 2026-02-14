@@ -9,6 +9,13 @@ import icon from "astro-icon"; // https://www.astroicon.dev/guides/upgrade/v1/
 // https://astro.build/config
 export default defineConfig({
 	site: "https://lesong-jia.github.io",
+	i18n: {
+		defaultLocale: "zh",
+		locales: ["zh", "en"],
+		routing: {
+			prefixDefaultLocale: true,
+		},
+	},
 	integrations: [
 		// example auto import component into blog post mdx files
 		AutoImport({

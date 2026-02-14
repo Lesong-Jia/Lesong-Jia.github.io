@@ -1,0 +1,37 @@
+---
+import Hero from "@components/Hero/Hero.astro";
+import SelfIntro from "@components/SelfIntro/SelfIntro.astro";
+import NewsSection from "@components/News/NewsSection.astro";
+import PublicationsSection from "@components/Publications/PublicationsSection.astro";
+import CollaboratorsSection from "@components/Collaborators/CollaboratorsSection.astro";
+import siteData from "@config/siteData.json";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { t } from "@/utils/i18n";
+
+export async function getStaticPaths() {
+	return [
+		{ params: { lang: "zh" } },
+		{ params: { lang: "en" } },
+	];
+}
+
+const lang = Astro.params.lang as "zh" | "en";
+---
+
+<BaseLayout title={siteData.title} description={siteData.description} navStartStyle="white">
+	<Hero />
+	<SelfIntro
+		title={t("home.title", lang)}
+		description={t("home.description", lang)}
+	>
+		<div class="description mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-base">
+			<span>+86 15051857337</span>
+			<span>lej50@pitt.edu</span>
+			<a href="https://scholar.google.com/citations?user=qw4JKHkAAAAJ" target="_blank" rel="noopener noreferrer" class="hover:opacity-80">Google Scholar</a>
+			<a href={lang === "zh" ? "/CV_LesongJia_CN.pdf" : "/CV_LesongJia_EN.pdf"} target="_blank" rel="noopener noreferrer" class="hover:opacity-80">{t("home.cv", lang)}</a>
+		</div>
+	</SelfIntro>
+	<NewsSection />
+	<PublicationsSection />
+	<CollaboratorsSection />
+</BaseLayout>

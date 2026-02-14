@@ -3,11 +3,14 @@ import MobileNav from "@components/Nav/MobileNav/MobileNav.astro";
 import NavDropdown from "@components/Nav/NavDropdown/NavDropdown.astro";
 import NavLink from "@components/Nav/NavLink.astro";
 import SiteLogo from "@components/SiteLogo/SiteLogo.astro";
-import navData from "@config/navData.json";
+import { getNavItems } from "@config/navData.json";
+
+const lang = Astro.url.pathname.startsWith("/en/") ? "en" : "zh";
+const navData = getNavItems(lang);
 
 interface Props {
-	startStyle?: "default" | "white"; // if set to "white", the nav elements will be white until the page is scrolled down. Useful for background hero images.
-	rest?: any; // catch-all for any additional parameters, such as "aria-label"
+	startStyle?: "default" | "white";
+	rest?: any;
 }
 
 const { startStyle = "default", rest } = Astro.props as Props;

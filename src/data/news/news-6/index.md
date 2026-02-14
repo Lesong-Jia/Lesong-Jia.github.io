@@ -1,6 +1,7 @@
 ---
 title: "论文 More Than Automation 获 HRI 2025 最佳论文奖"
 description: "我们的论文 More Than Automation: User Insights into the Functionality and Interface of Wheelchair-Mounted Robotic Arms 获机器人交互顶会 HRI 2025 最佳论文。作者：Lesong Jia, Breelyn Kane Styler, Na Du。"
+descriptionEn: "Our paper More Than Automation: User Insights into the Functionality and Interface of Wheelchair-Mounted Robotic Arms received the Best Paper Award at HRI 2025."
 heroImage: ./cover.png
 date: "2025-03-06"
 order: 6

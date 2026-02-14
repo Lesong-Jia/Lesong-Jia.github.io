@@ -7,10 +7,11 @@ const news = defineCollection({
 		pattern: "**/[^_]*.{md,mdx}",
 		base: "./src/data/news",
 	}),
-	schema: ({ image }) =>
+		schema: ({ image }) =>
 		z.object({
 			title: z.string(),
 			description: z.string(),
+			descriptionEn: z.string().optional(),
 			heroImage: image().optional(),
 			author: z.string().optional(),
 			date: z.coerce.date(),
@@ -65,6 +66,10 @@ const collaborators = defineCollection({
 			showOnHomepage: z.boolean().optional(),
 			homepageOrder: z.number().optional(),
 			draft: z.boolean().optional(),
+			// English for en locale
+			nameEn: z.string().optional(),
+			titleEn: z.string().optional(),
+			bioEn: z.string().optional(),
 		}),
 });
 

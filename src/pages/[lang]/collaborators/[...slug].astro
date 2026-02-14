@@ -1,0 +1,86 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import type { InferGetStaticPropsType } from "astro";
+import type { CollectionEntry } from "astro:content";
+import { getCollection, render } from "astro:content";
+import { getLocalizedPath, t } from "@/utils/i18n";
+
+export async function getStaticPaths() {
+	const items = await getCollection("collaborators", ({ data }) => data.draft !== true);
+	const langs = ["zh", "en"];
+	const paths = [];
+	for (const lang of langs) {
+		for (const entry of items) {
+			paths.push({
+				params: { lang, slug: entry.id },
+				props: { entry, lang },
+			});
+		}
+	}
+	return paths;
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { entry, lang } = Astro.props as { entry: CollectionEntry<"collaborators">; lang: "zh" | "en" };
+const { Content } = await render(entry);
+const { name, title, image, link, nameEn, titleEn, bioEn } = entry.data;
+const displayName = lang === "en" && nameEn ? nameEn : name;
+const displayTitle = lang === "en" && titleEn ? titleEn : title;
+const useEnBio = lang === "en" && bioEn;
+---
+
+<BaseLayout title={displayName} description={`${displayName}, ${displayTitle}`} navStartStyle="default">
+	<article class="site-container pt-24 pb-16 md:pt-36 md:pb-24">
+		<div class="flex flex-col gap-8 md:flex-row md:items-start">
+			<div class="w-[28rem] shrink-0 overflow-hidden bg-transparent md:w-[32rem]">
+				{image ? (
+					<Image
+						src={image}
+						alt=""
+						width={1024}
+						height={1024}
+						quality={100}
+						class="aspect-square w-full object-cover"
+					/>
+				) : (
+					<div class="aspect-square w-full bg-base-200" aria-hidden="true" />
+				)}
+			</div>
+			<div class="min-w-0 flex-1 flex flex-col md:h-[32rem]">
+				<div>
+					<h1 class="font-heading-1 text-2xl font-medium text-base-900 md:text-3xl">{displayName}</h1>
+					<p class="mt-1 text-base text-base-600">{displayTitle}</p>
+					{link && (
+						<p class="mt-2">
+							<a href={link} target="_blank" rel="noopener noreferrer" class="text-sm text-base-600 underline underline-offset-2 hover:text-base-900">
+								{t("collaborators.homepage", lang)}
+							</a>
+						</p>
+					)}
+					<div class="markdown-content mt-6 text-base-700">
+						{useEnBio ? (
+							bioEn.split("\n\n").map((p) => <p class="mb-4 leading-relaxed last:mb-0">{p}</p>)
+						) : (
+							<Content />
+						)}
+					</div>
+				</div>
+				<div class="mt-auto flex flex-wrap items-center justify-end gap-4">
+					<a
+						href={getLocalizedPath("/collaborators", lang)}
+						class="text-sm text-base-600 underline underline-offset-2 hover:text-base-900"
+					>
+						{t("collaborators.backToAll", lang)}
+					</a>
+					<a
+						href={getLocalizedPath("/", lang)}
+						class="text-sm text-base-600 underline underline-offset-2 hover:text-base-900"
+					>
+						{t("collaborators.backToHome", lang)}
+					</a>
+				</div>
+			</div>
+		</div>
+	</article>
+</BaseLayout>

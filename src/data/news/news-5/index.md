@@ -1,6 +1,7 @@
 ---
 title: "论文 Modeling Driver Situational Awareness in Takeover Scenarios 发表于 IJHCI"
 description: "我们的论文 Modeling Driver Situational Awareness in Takeover Scenarios Using Multimodal Data and Machine Learning 已正式发表于 JCR Q1 期刊 International Journal of Human–Computer Interaction。作者：Lesong Jia, Na Du。"
+descriptionEn: "Our paper Modeling Driver Situational Awareness in Takeover Scenarios Using Multimodal Data and Machine Learning has been published in the JCR Q1 journal International Journal of Human–Computer Interaction."
 heroImage: ./cover.png
 date: "2025-09-02"
 order: 5

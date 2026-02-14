@@ -48,14 +48,14 @@
 	--breakpoint-xl: 1280px;
 	--breakpoint-2xl: 1536px;
 
-	/* font families */
+	/* font families: Site Sans = Helvetica (Latin/numbers) + Source Han Sans (CJK) */
 	--font-fallback:
-		"-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica", "Arial", "sans-serif",
+		"Helvetica", "Arial", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif",
 		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-	--font-sans: "Work Sans Variable", var(--font-fallback);
-	--font-heading-1: "Playfair Display Variable", var(--font-serif);
-	--font-heading-2: "Raleway Variable", var(--font-fallback);
-	--font-decorative: "Cinzel Decorative", "Playfair Display Variable", var(--font-serif);
+	--font-sans: "Site Sans", var(--font-fallback);
+	--font-heading-1: "Site Sans", var(--font-fallback);
+	--font-heading-2: "Site Sans", var(--font-fallback);
+	--font-decorative: "Site Sans", var(--font-fallback);
 	--font-mono:
 		"SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace";
 }

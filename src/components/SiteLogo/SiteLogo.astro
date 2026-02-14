@@ -2,9 +2,13 @@
 import siteData from "@config/siteData.json";
 import logo from "@images/site-logo.png";
 import { Image } from "astro:assets";
+import { getLocalizedPath } from "@/utils/i18n";
+
+// 从 URL 路径中提取语言
+const lang = (Astro.url.pathname.startsWith("/en/") ? "en" : "zh") as "zh" | "en";
 ---
 
-<a class="primary-focus flex items-center align-middle" href="/" aria-label="Home" class="">
+<a class="primary-focus flex items-center align-middle" href={getLocalizedPath("/", lang)} aria-label="Home" class="">
 	<!-- <Image
     src={logo}
     alt="Cosmic Themes logo"
@@ -13,5 +17,5 @@ import { Image } from "astro:assets";
     height={100}
     class="h-14 w-14"
   /> -->
-	<div class="font-heading-1 text-xl uppercase">{siteData.name}</div>
+	<div class="font-heading-1 text-xl uppercase">{lang === "en" && siteData.nameEn ? siteData.nameEn : siteData.name}</div>
 </a>

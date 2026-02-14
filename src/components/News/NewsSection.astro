@@ -5,7 +5,10 @@
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
+import { getLocalizedPath, t } from "@/utils/i18n";
 
+// 从 URL 路径中提取语言
+const lang = (Astro.url.pathname.startsWith("/en/") ? "en" : "zh") as "zh" | "en";
 const newsItems = await getCollection("news", ({ data }) => data.draft !== true);
 // 按日期从新到旧排序，若日期相同则按 order
 const sorted = newsItems.sort(
@@ -13,8 +16,8 @@ const sorted = newsItems.sort(
 );
 const featured = sorted.slice(0, 3);
 
-function formatMeta(date: Date, author?: string) {
-	const dateStr = date.toLocaleDateString("zh-CN", { month: "short", day: "numeric", year: "numeric" });
+function formatMeta(date: Date, author?: string, locale: string = "zh-CN") {
+	const dateStr = date.toLocaleDateString(locale, { month: "short", day: "numeric", year: "numeric" });
 	return author ? `${author} · ${dateStr}` : dateStr;
 }
 ---
@@ -23,24 +26,32 @@ function formatMeta(date: Date, author?: string) {
 	<div class="mx-auto max-w-6xl">
 		<div class="mb-10 flex flex-wrap items-end justify-between gap-4 md:mb-12">
 			<h2 class="h2 text-pretty uppercase">
-				相关新闻
+				{t("news.title", lang)}
 			</h2>
-			<a href="/news" class="text-sm text-base-600 underline underline-offset-2 hover:text-base-900">
-				查看更多
+			<a href={getLocalizedPath("/news", lang)} class="text-sm text-base-600 underline underline-offset-2 hover:text-base-900">
+				{lang === "en" ? "View More" : "查看更多"}
 			</a>
 		</div>
 		<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
 			{featured.map((entry) => {
-				const { description, heroImage, date, author, acceptedBy } = entry.data;
-				const cardTitle = acceptedBy
-	? acceptedBy.includes("最佳论文奖")
-		? `我们的论文获得了${acceptedBy.replace(/（最佳论文奖）/, "").trim()}最佳论文`
-		: `我们的论文被${acceptedBy}接收`
-	: entry.data.title;
-				const metaStr = formatMeta(date, author);
+				const { description, descriptionEn, heroImage, date, author, acceptedBy } = entry.data;
+				const cardDescription = lang === "en" && descriptionEn ? descriptionEn : description;
+				// 根据语言生成标题
+				const cardTitle = lang === "en"
+					? (acceptedBy
+						? acceptedBy.includes("最佳论文奖") || acceptedBy.toLowerCase().includes("best paper")
+							? `Our paper received the Best Paper Award at ${acceptedBy.replace(/（最佳论文奖）|\(Best Paper Award\)/gi, "").trim()}`
+							: `Our paper was accepted by ${acceptedBy}`
+						: entry.data.title)
+					: (acceptedBy
+						? acceptedBy.includes("最佳论文奖")
+							? `我们的论文获得了${acceptedBy.replace(/（最佳论文奖）/, "").trim()}最佳论文`
+							: `我们的论文被${acceptedBy}接收`
+						: entry.data.title);
+				const metaStr = formatMeta(date, author, lang === "en" ? "en-US" : "zh-CN");
 				return (
 					<article class="flex flex-col overflow-hidden rounded-xl bg-base-50">
-						<a href={`/news/${entry.id}`} class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2">
+						<a href={getLocalizedPath(`/news/${entry.id}`, lang)} class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2">
 							<div class="aspect-[4/3] w-full overflow-hidden rounded-t-xl rounded-b-xl bg-base-200">
 								{heroImage ? (
 								<Image
@@ -53,7 +64,7 @@ function formatMeta(date: Date, author?: string) {
 								/>
 								) : (
 									<div class="flex h-full w-full items-center justify-center text-base-500 text-sm">
-										暂无图片
+										{lang === "en" ? "No image" : "暂无图片"}
 									</div>
 								)}
 							</div>
@@ -61,11 +72,11 @@ function formatMeta(date: Date, author?: string) {
 								<p class="text-sm text-base-500">
 									{metaStr}
 								</p>
-								<h3 class="mt-1.5 font-heading-2 text-lg font-bold text-base-900 md:text-xl">
+								<h3 class="mt-1.5 font-heading-2 text-lg font-medium text-base-900 md:text-xl">
 									{cardTitle}
 								</h3>
 								<p class="mt-2 text-base text-base-600 line-clamp-2">
-									{description}
+									{cardDescription}
 								</p>
 							</div>
 						</a>

@@ -11,37 +11,36 @@ export interface navDropdownItem {
 
 export type navItem = navLinkItem | navDropdownItem;
 
-// note: 1 level of dropdown is supported
-const navConfig: navItem[] = [
-	{
-		text: "新闻",
-		link: "/news",
-	},
-	{
-		text: "研究方向",
-		link: "/publications",
-	},
-	// {
-	// 	text: "实验室成员",
-	// 	link: "/#pricing",
-	// },
-	{
-		text: "导师与合作者",
-		link: "/collaborators",
-	},
+const navConfigZh: navItem[] = [
+	{ text: "新闻", link: "/news" },
+	{ text: "研究方向", link: "/publications" },
+	{ text: "导师与合作者", link: "/collaborators" },
 	{
 		text: "中文/EN",
 		dropdown: [
-			{
-				text: "English",
-				link: "/en/",
-			},
-			{
-				text: "中文",
-				link: "/zh/",
-			},
+			{ text: "English", link: "/en/" },
+			{ text: "中文", link: "/zh/" },
 		],
 	},
 ];
 
-export default navConfig;
+const navConfigEn: navItem[] = [
+	{ text: "News", link: "/news" },
+	{ text: "Research", link: "/publications" },
+	{ text: "Collaborators", link: "/collaborators" },
+	{
+		text: "中文/EN",
+		dropdown: [
+			{ text: "English", link: "/en/" },
+			{ text: "中文", link: "/zh/" },
+		],
+	},
+];
+
+/** Returns nav items with labels in the given language. */
+export function getNavItems(lang: "zh" | "en"): navItem[] {
+	return lang === "en" ? navConfigEn : navConfigZh;
+}
+
+// note: 1 level of dropdown is supported; default export for backward compat
+export default navConfigZh;

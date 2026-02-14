@@ -1,6 +1,7 @@
 ---
 title: "论文 How Humans Naturally Refer to Targets 被 CHI 2026 接收"
 description: "我们的论文 How Humans Naturally Refer to Targets: Understanding Multimodal Instruction Patterns in Human–Robot Interaction 已被人机交互顶会 CHI 2026 接收。作者：Lesong Jia, Makayla Chang, Na Du。"
+descriptionEn: "Our paper How Humans Naturally Refer to Targets: Understanding Multimodal Instruction Patterns in Human–Robot Interaction has been accepted at CHI 2026."
 heroImage: ./cover.png
 date: "2026-01-18"
 order: 2

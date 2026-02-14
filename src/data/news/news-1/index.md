@@ -1,6 +1,7 @@
 ---
 title: "论文 Understanding Situation Awareness in Multi-UAV Supervision 发表于 IJHCI"
 description: "我们的论文 Understanding Situation Awareness in Multi-UAV Supervision: Effects of Environmental Complexity, Interface Design, and Human–AI Differences 已正式发表于 JCR Q1 期刊 International Journal of Human–Computer Interaction。作者：Lesong Jia et al。"
+descriptionEn: "Our paper Understanding Situation Awareness in Multi-UAV Supervision: Effects of Environmental Complexity, Interface Design, and Human–AI Differences has been published in the JCR Q1 journal International Journal of Human–Computer Interaction."
 heroImage: ./cover.jpg
 date: "2026-02-10"
 order: 1

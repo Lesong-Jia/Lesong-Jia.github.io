@@ -1,0 +1,38 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getLocalizedPath } from "@/utils/i18n";
+
+export async function getStaticPaths() {
+	return [
+		{ params: { lang: "zh" } },
+		{ params: { lang: "en" } },
+	];
+}
+
+const lang = Astro.params.lang as "zh" | "en";
+const title = lang === "en" ? "404" : "404";
+const heading = lang === "en" ? "Page Not Found" : "页面未找到";
+const description = lang === "en" 
+	? "Sorry, the page you are looking for does not exist. Please check if the link is correct, or return to the homepage."
+	: "抱歉，您访问的页面不存在。请检查链接是否正确，或返回首页。";
+const backToHome = lang === "en" ? "Back to Home" : "返回首页";
+---
+
+<BaseLayout title={title} description={description} noindex={true}>
+	<section class="site-container pt-36 text-center md:pt-44">
+		<div class="mx-auto max-w-xl px-4 text-center">
+			<h1 class="h1">{heading}</h1>
+			<p class="description mt-4">
+				{description}
+			</p>
+			<div class="mt-8 flex justify-center">
+				<a
+					href={getLocalizedPath("/", lang)}
+					class="text-base text-base-600 underline underline-offset-2 hover:text-base-900"
+				>
+					{backToHome}
+				</a>
+			</div>
+		</div>
+	</section>
+</BaseLayout>

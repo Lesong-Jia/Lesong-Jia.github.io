@@ -1,0 +1,94 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import { getLocalizedPath, t } from "@/utils/i18n";
+
+export async function getStaticPaths() {
+	return [
+		{ params: { lang: "zh" } },
+		{ params: { lang: "en" } },
+	];
+}
+
+const lang = Astro.params.lang as "zh" | "en";
+const newsItems = await getCollection("news", ({ data }) => data.draft !== true);
+// 按日期从新到旧排序，若日期相同则按 order
+const sorted = newsItems.sort(
+	(a, b) => b.data.date.getTime() - a.data.date.getTime() || a.data.order - b.data.order,
+);
+
+function formatMeta(date: Date, author?: string, locale: string = "zh-CN") {
+	const dateStr = date.toLocaleDateString(locale, { month: "short", day: "numeric", year: "numeric" });
+	return author ? `${author} · ${dateStr}` : dateStr;
+}
+---
+
+<BaseLayout title={t("news.title", lang)} description={t("news.description", lang)} navStartStyle="default">
+	<div class="site-container pt-24 md:pt-36">
+		<div class="mx-auto max-w-6xl">
+			<div class="mb-12 flex flex-wrap items-end justify-between gap-4">
+				<h1 class="h2 text-pretty uppercase">{t("news.title", lang)}</h1>
+				<a
+					href={getLocalizedPath("/", lang)}
+					class="text-sm text-base-600 underline underline-offset-2 hover:text-base-900"
+				>
+					{t("news.backToHome", lang)}
+				</a>
+			</div>
+			<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+				{sorted.map((entry) => {
+					const { description, descriptionEn, heroImage, date, author, acceptedBy } = entry.data;
+					const cardDescription = lang === "en" && descriptionEn ? descriptionEn : description;
+					// 根据语言生成标题
+					const cardTitle = lang === "en"
+						? (acceptedBy
+							? acceptedBy.includes("最佳论文奖") || acceptedBy.toLowerCase().includes("best paper")
+								? `Our paper received the Best Paper Award at ${acceptedBy.replace(/（最佳论文奖）|\(Best Paper Award\)/gi, "").trim()}`
+								: `Our paper was accepted by ${acceptedBy}`
+							: entry.data.title)
+						: (acceptedBy
+							? acceptedBy.includes("最佳论文奖")
+								? `我们的论文获得了${acceptedBy.replace(/（最佳论文奖）/, "").trim()}最佳论文`
+								: `我们的论文被${acceptedBy}接收`
+							: entry.data.title);
+					const metaStr = formatMeta(date, author, lang === "en" ? "en-US" : "zh-CN");
+					return (
+						<article class="flex flex-col overflow-hidden rounded-xl bg-base-50">
+							<a href={getLocalizedPath(`/news/${entry.id}`, lang)} class="block focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2">
+								<div class="aspect-[4/3] w-full overflow-hidden rounded-t-xl rounded-b-xl bg-base-200">
+									{heroImage ? (
+										<Image
+											src={heroImage}
+											alt=""
+											width={1200}
+											height={900}
+											quality={100}
+											class="h-full w-full object-cover"
+										/>
+									) : (
+										<div class="flex h-full w-full items-center justify-center text-base-500 text-sm">
+											{lang === "en" ? "No image" : "暂无图片"}
+										</div>
+									)}
+								</div>
+								<div class="flex flex-1 flex-col pt-5 pr-5 pb-5 pl-0 text-left md:pt-6 md:pr-6 md:pb-6 md:pl-0">
+									<p class="text-sm text-base-500">
+										{metaStr}
+									</p>
+									<h2 class="mt-1.5 font-heading-2 text-xl font-medium text-base-900">
+										{cardTitle}
+									</h2>
+									<p class="mt-2 text-base text-base-600 line-clamp-2">
+										{cardDescription}
+									</p>
+								</div>
+							</a>
+						</article>
+					);
+				})}
+			</div>
+		</div>
+	</div>
+</BaseLayout>

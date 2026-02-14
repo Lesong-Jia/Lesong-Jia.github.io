@@ -1,0 +1,273 @@
+---
+import { Image } from "astro:assets";
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import siteData from "@config/siteData.json";
+import directionMultimodal from "@images/direction-multimodal.png";
+import directionRobot from "@images/direction-robot.png";
+import directionSituation from "@images/direction-situation.png";
+import directionVr from "@images/direction-vr.png";
+import { getLocalizedPath, t } from "@/utils/i18n";
+
+export async function getStaticPaths() {
+	return [
+		{ params: { lang: "zh" } },
+		{ params: { lang: "en" } },
+	];
+}
+
+const lang = Astro.params.lang as "zh" | "en";
+
+// 获取所有发表
+const allPublications = await getCollection("publications", ({ data }) => data.draft !== true);
+
+// 获取作者位次：1=一作, 2=二作, 3+=其他
+function getAuthorPosition(authors: string, authorName: string): number {
+	const authorList = authors.split(",").map((a) => a.trim());
+	// 检查完整名字匹配（支持 "Lesong Jia" 或 "Jia Lesong" 格式）
+	const index = authorList.findIndex((a) => {
+		const normalized = a.toLowerCase();
+		const nameParts = authorName.toLowerCase().split(" ");
+		// 检查是否包含名字的所有部分
+		return nameParts.every((part) => normalized.includes(part));
+	});
+	if (index === -1) return 999; // 未找到，排最后
+	if (index === 0) return 1; // 一作
+	if (index === 1) return 2; // 二作
+	return 3; // 其他位次
+}
+
+// 排序：先按作者位次（一作>二作>其他），再按年份（新的在前）
+const sortedPublications = allPublications.sort((a, b) => {
+	const posA = getAuthorPosition(a.data.authors, siteData.author.name);
+	const posB = getAuthorPosition(b.data.authors, siteData.author.name);
+	if (posA !== posB) return posA - posB; // 先按位次排序
+	return b.data.year - a.data.year; // 再按年份降序
+});
+
+// 高亮作者名字
+function highlightAuthor(authors: string, name: string): (string | { bold: string })[] {
+	if (!name || !authors.includes(name)) return [authors];
+	const parts = authors.split(name);
+	const out: (string | { bold: string })[] = [];
+	parts.forEach((part, i) => {
+		out.push(part);
+		if (i < parts.length - 1) out.push({ bold: name });
+	});
+	return out;
+}
+
+// 方向名称映射（中文 -> 英文）
+const directionMap: Record<string, { zh: string; en: string }> = {
+	"多模态交互": { zh: "多模态交互", en: "Multimodal Interaction" },
+	"机器人交互": { zh: "机器人交互", en: "Robot Interaction" },
+	"态势感知": { zh: "态势感知", en: "Situation Awareness" },
+	"虚拟与增强现实": { zh: "虚拟与增强现实", en: "Virtual and Augmented Reality" },
+};
+
+// 四个研究方向的内容
+const researchProjects = [
+	{
+		title: lang === "en" ? "Multimodal Interaction" : "多模态交互",
+		direction: "多模态交互",
+		directionEn: "Multimodal Interaction",
+		image: directionMultimodal,
+		imageSmall: true,
+		imageMaxSize: 88,
+		content: lang === "en" ? `Our multimodal interaction research aims to integrate multiple input channels such as gestures, speech, and posture to create more natural and efficient human-computer interaction methods. This research primarily encompasses two directions: scripted multimodal interaction design and natural multimodal behavior understanding.
+
+Scripted multimodal interaction refers to predefined interaction schemes designed by developers, such as using specific gestures combined with voice commands to accomplish target selection and task execution. In such interactions, users must follow established rules and use designated multimodal inputs to convey their intentions to the system. Our research in this direction focuses on exploring users' multimodal usage patterns and preferences across different scenarios and tasks, analyzing users' semantic understanding capabilities and encoding spaces for different modal information, thereby designing interpretable, learnable, and generalizable scripted multimodal interaction schemes for various interaction functions.
+
+On the other hand, natural multimodal behavior understanding emphasizes allowing users to interact with systems using multimodal behaviors in a more free-form manner. Compared to scripted approaches, this method better aligns with user intuition, with natural and fluid interaction processes and minimal additional learning costs. However, this also places higher demands on multimodal behavior recognition and intent inference algorithms. To this end, we start from the collection and analysis of users' natural multimodal behaviors, combining traditional machine learning methods with large language models to build intelligent interaction models capable of understanding natural multimodal expressions, supporting more robust and generalizable human-computer interaction systems.` : `我们的多模态交互研究致力于整合手势、语音、姿态等多种输入通道，构建更加自然、高效的人机交互方式。该研究主要涵盖两个方向：脚本化多模态交互方案设计与自然多模态行为理解。
+
+其中，脚本化多模态交互方案是指由设计者预先制定的交互方式，例如通过特定手势配合语音命令完成目标选择与任务执行。在此类交互中，用户需要遵循既定规则，使用指定的多模态输入向系统传达意图。我们在该方向的研究重点在于探究用户在不同场景与任务下的多模态使用习惯与偏好，并分析用户对不同模态信息的语义理解能力及其编码空间，从而为多种交互功能设计可解释、可学习、可推广的脚本化多模态交互方案。
+
+另一方面，自然多模态行为理解则强调允许用户以更加自由的方式使用多模态行为与系统交互。相比脚本化方案，该方式更加符合用户直觉，交互过程自然流畅，且几乎不存在额外学习成本。然而，这也对多模态行为识别与意图推断算法提出了更高要求。为此，我们从用户自然多模态行为的采集与分析出发，结合传统机器学习方法与大语言模型，构建能够理解自然多模态表达的智能交互模型，以支持更具鲁棒性与泛化能力的人机交互系统。`,
+	},
+	{
+		title: lang === "en" ? "Robot Interaction" : "机器人交互",
+		direction: "机器人交互",
+		directionEn: "Robot Interaction",
+		image: directionRobot,
+		imageSmall: true,
+		imageMaxSize: 90,
+		imageOffsetDown: true,
+		content: lang === "en" ? `Our robot interaction research focuses on user-centered communication mechanisms, aiming to enhance the usability, comprehensibility, and trustworthiness of robotic systems through appropriate interaction and feedback modalities, making them better aligned with user needs and usage patterns.
+
+In our specific research, we emphasize exploring users' core expectations regarding functional capabilities and interface information presentation when collaborating with robots to complete tasks, and summarizing the main difficulties and decision-making burdens users encounter during interactions. Through user studies, we analyze design considerations for robotic systems in task planning, execution feedback, operational transparency, and information presentation methods. We further investigate preference differences among different feedback modalities (such as visual and auditory) in robot control and interaction, as well as their impacts on interaction efficiency, workload, and user experience, thereby providing empirical evidence and design recommendations for more natural and efficient human-robot collaboration interfaces.
+
+Additionally, we treat emotional factors as an important dimension affecting human-robot interaction quality, systematically studying the mechanisms through which robot emotional expression and emotion regulation strategies influence user feelings and behaviors. We focus on exploring how different emotion regulation approaches (such as empathetic versus non-empathetic regulation) affect user emotional changes, trust formation, advice adoption tendencies, and overall interaction evaluations across different contexts. Through experimental paradigms such as video and simulation tasks, we establish analytical frameworks to provide theoretical and experimental support for building robot interaction strategies with greater social intelligence and emotional adaptability.` : `我们的机器人交互研究关注以用户为中心的沟通机制，旨在通过合理的交互与反馈形式提升机器人系统的可用性、可理解性与可信度，使其更贴合用户需求与使用习惯。
+
+在具体研究中，我们重点探讨用户在与机器人协作完成任务时对功能能力与界面信息呈现的核心期待，并总结用户在交互过程中遇到的主要困难与决策负担。我们通过用户研究分析机器人系统在任务规划、执行反馈、操作透明度与信息呈现方式上的设计要点，并进一步研究不同反馈模态（如视觉、听觉等）在机器人控制与交互中的偏好差异及其对交互效率、工作负荷与用户体验的影响，从而为更自然、更高效的人机协作界面设计提供实证依据与设计建议。
+
+此外，我们将情绪因素作为影响人机交互质量的重要维度，系统研究机器人情绪表达与情绪调节策略对用户感受与行为的作用机制。我们重点探讨不同情绪调节方式（如共情式与非共情式调节）在不同情境下对用户情绪变化、信任形成、建议采纳倾向以及整体交互评价的影响，并通过视频与仿真任务等实验范式建立分析框架，为构建更具社会智能与情感适应能力的机器人交互策略提供理论与实验支持。`,
+	},
+	{
+		title: lang === "en" ? "Situation Awareness" : "态势感知",
+		direction: "态势感知",
+		directionEn: "Situation Awareness",
+		image: directionSituation,
+		content: lang === "en" ? `Situation awareness refers to an individual's ability to perceive and understand critical information in dynamic environments, as well as predict future states. In high cognitive load, high information density application scenarios such as autonomous driving takeovers and UAV reconnaissance, whether users possess accurate situation awareness directly impacts their decision-making quality and task safety. Therefore, identifying and enhancing users' situation awareness levels has become a critical issue in intelligent system design. Our research primarily focuses on two directions: situation awareness state prediction and enhancing situation awareness through interface design.
+
+First, we have constructed a comprehensive framework for situation awareness prediction that systematically integrates multiple influencing factors including user capabilities, user states, user behaviors, and situational contexts. Under this framework, we combine individual difference characteristics such as user age, gender, and driving experience, along with physiological and behavioral signals such as eye movements, electrocardiography, and skin conductance, with environmental features such as the size and color of critical targets in the scene, to build situation awareness state prediction models. These models can help systems identify situation information that users may miss or misinterpret, and further generate targeted prompts and assistance information, thereby supporting more timely and reliable decision-making.
+
+Furthermore, we investigate the extent to which different types of user interfaces can help users more effectively grasp situational information. Related research covers multiple dimensions including content design for interface information presentation, presentation modalities (such as visual, auditory, or multimodal fusion), and information organization and expression methods. Through user experiments and statistical analysis, we strive to summarize interface design patterns across different task scenarios and propose generalizable design recommendations for situation awareness assistance interfaces, aiming to improve user comprehension efficiency, reduce cognitive load, and enhance task safety and overall interaction experience.` : `态势感知指的是个体在动态环境中对关键信息的感知、理解以及对未来状态的预测能力。在自动驾驶接管、无人机侦察等高认知负荷、高信息密度的应用场景中，用户是否具备准确的态势感知往往直接影响其决策质量与任务安全性。因此，如何识别并提升用户的态势感知水平成为智能系统设计中的关键问题。我们的研究主要聚焦于两个方向：态势感知状态预测以及通过界面设计提升态势感知水平。
+
+首先，我们构建了一个面向态势感知预测的综合框架，系统性地整合了用户能力、用户状态、用户行为以及场景态势等多类影响因素。在该框架下，我们将用户年龄、性别、驾驶经验等个体差异特征，以及眼动、心电、皮电等生理与行为信号，与环境中关键目标的尺寸、颜色等场景特征相结合，构建态势感知状态预测模型。该模型能够帮助系统识别用户可能缺失或误判的态势信息，并进一步生成针对性的提示与辅助信息，从而支持更及时、更可靠的决策。
+
+进一步地，我们研究不同类型的用户界面在多大程度上能够帮助用户更有效地掌握态势信息。相关研究涵盖界面信息呈现的内容设计、呈现模态（如视觉、听觉或多模态融合）以及信息组织与表达方式等多个维度。通过用户实验与统计分析，我们致力于总结不同任务场景下的界面设计规律，并提出可推广的态势感知辅助界面设计建议，以提升用户的理解效率、降低认知负荷，并增强任务安全性与整体交互体验。`,
+	},
+	{
+		title: lang === "en" ? "Virtual and Augmented Reality" : "虚拟与增强现实",
+		direction: "虚拟与增强现实",
+		directionEn: "Virtual and Augmented Reality",
+		image: directionVr,
+		imageSmall: true,
+		imageMaxSize: 97,
+		content: lang === "en" ? `Our research in virtual and augmented reality interaction focuses on creating more comfortable and efficient immersive interaction environments for users, with particular emphasis on interface layout optimization, virtual button size and distribution design, and operational performance and usability across different interaction modalities. Through systematic user experiments and interaction data analysis, we evaluate users' behavioral characteristics and operational efficiency when completing fundamental tasks such as selection and clicking in virtual environments, proposing quantitative evaluation methods for virtual interaction tasks and providing verifiable design foundations and optimization directions for VR/AR interface control design.
+
+Furthermore, our research emphasizes understanding interaction processes and cognitive state changes from users' multimodal behavioral data, and building adaptive user interfaces based on these dynamic information. We combine multimodal signals such as eye movements and hand gestures to analyze the impacts of bare-hand clicking and traditional control methods on users' visual search strategies, attention allocation patterns, and operational load. We also explore modeling methods that leverage multimodal features to predict users' attention states. This work establishes the foundation for providing real-time user state recognition and adaptive interaction support for immersive systems, advancing VR/AR interaction design from static interface optimization toward intelligent, personalized, and dynamic adaptation.` : `我们在虚拟与增强现实交互领域的研究聚焦于为用户构建更加舒适、高效的沉浸式交互环境，重点关注界面布局优化、虚拟按键尺寸与分布设计，以及不同交互方式下的操作性能与可用性表现。我们通过系统性的用户实验与交互数据分析，评估用户在虚拟环境中完成选择、点击等基础任务时的行为特征与操作效率，提出面向虚拟交互任务的量化评估方法，为VR/AR界面控件设计提供可验证的设计依据与优化方向。
+
+进一步地，我们的研究强调从用户多模态行为数据中理解交互过程与认知状态变化，并基于这些动态信息构建自适应的用户界面。我们结合眼动与手部动作等多模态信号，分析裸手点击与传统控制方式对用户视觉搜索策略、注意分配模式及操作负荷的影响，并探索利用多模态特征预测用户注意状态的建模方法。相关工作为沉浸式系统提供实时用户状态识别与自适应交互支持奠定基础，推动VR/AR交互设计从静态界面优化进一步迈向智能化、个性化与动态调整。`,
+	},
+];
+---
+
+<BaseLayout title={t("publications.title", lang)} description={t("publications.description", lang)} navStartStyle="default">
+	<div class="site-container pt-24 pb-16 md:pt-36 md:pb-24">
+		<div class="mb-12 flex flex-wrap items-end justify-between gap-4">
+			<h1 class="h2 text-pretty uppercase">{t("publications.title", lang)}</h1>
+			<a
+				href={getLocalizedPath("/", lang)}
+				class="text-sm text-base-600 underline underline-offset-2 hover:text-base-900"
+			>
+				{t("publications.backToHome", lang)}
+			</a>
+		</div>
+
+		<div class="space-y-16">
+			{researchProjects.map((project) => (
+				<section class="flex flex-col gap-8 md:flex-row md:items-start">
+					<!-- 左侧图片 -->
+					<div class="w-full shrink-0 md:w-[32rem]">
+						<div class="aspect-[4/3] w-full overflow-hidden bg-white md:h-[384px] flex items-center justify-center">
+							<Image
+								src={project.image}
+								alt={project.title}
+								width={1280}
+								height={960}
+								quality={95}
+								class={project.imageSmall ? `h-full w-full max-h-[${project.imageMaxSize ?? 85}%] max-w-[${project.imageMaxSize ?? 85}%] object-contain ${project.imageOffsetDown ? "mt-1" : ""}` : "h-full w-full object-cover"}
+							/>
+						</div>
+					</div>
+
+					<!-- 右侧文字内容（可滚动） -->
+					<div class="min-w-0 flex-1 flex flex-col md:h-[384px]">
+						<h2 class="mb-4 shrink-0 font-heading-2 text-2xl font-medium text-base-900 md:text-3xl">
+							{project.title}
+						</h2>
+						<div class="markdown-content flex-1 pr-2 text-base-700">
+							{project.content.split("\n\n").map((paragraph) => (
+								<p class="mb-4 leading-relaxed last:mb-0">{paragraph}</p>
+							))}
+
+							{/* 相关发表列表 */}
+							{(() => {
+								const relatedPubs = sortedPublications.filter(
+									(entry) => entry.data.direction === project.direction,
+								);
+								if (relatedPubs.length === 0) return null;
+								return (
+									<div class="mt-8 border-t border-base-300 pt-6">
+										<h3 class="mb-4 font-heading-2 text-lg font-medium text-base-900">
+											{t("publications.related", lang)}
+										</h3>
+										<ul class="space-y-4">
+											{relatedPubs.map((entry) => {
+												const { title, authors, venue, year, doi } = entry.data;
+												const doiUrl = doi ? `https://doi.org/${doi}` : "";
+												return (
+													<li class="text-sm">
+														<p class="leading-relaxed">
+															<span class="font-medium">
+																{highlightAuthor(authors, siteData.author.name).map((seg) =>
+																	typeof seg === "string" ? seg : <strong>{seg.bold}</strong>
+																)}
+															</span>. {title}.{" "}
+															{venue && <span class="italic">{venue}</span>}
+															{year && `, ${year}`}.
+														</p>
+														{doiUrl && (
+															<p class="mt-1">
+																<a
+																	href={doiUrl}
+																	target="_blank"
+																	rel="noopener noreferrer"
+																	class="text-base-600 underline underline-offset-2 hover:text-base-900"
+																>
+																	DOI: {doi}
+																</a>
+															</p>
+														)}
+													</li>
+												);
+											})}
+										</ul>
+									</div>
+								);
+							})()}
+						</div>
+					</div>
+				</section>
+			))}
+		</div>
+	</div>
+</BaseLayout>
+
+<style>
+	.markdown-content {
+		overflow-y: scroll;
+		scrollbar-width: thin;
+		scrollbar-color: transparent transparent;
+	}
+
+	.markdown-content:hover {
+		scrollbar-color: var(--color-base-400) transparent;
+	}
+
+	/* Webkit browsers (Chrome, Safari, Edge) */
+	.markdown-content::-webkit-scrollbar {
+		width: 6px;
+	}
+
+	.markdown-content::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	.markdown-content::-webkit-scrollbar-thumb {
+		background-color: transparent;
+		border-radius: 3px;
+		transition: background-color 0.2s ease;
+	}
+
+	.markdown-content:hover::-webkit-scrollbar-thumb {
+		background-color: var(--color-base-400) !important;
+	}
+
+	.markdown-content::-webkit-scrollbar-thumb:hover {
+		background-color: var(--color-base-500) !important;
+	}
+
+	/* Firefox */
+	@-moz-document url-prefix() {
+		.markdown-content {
+			scrollbar-width: thin;
+			scrollbar-color: transparent transparent;
+		}
+
+		.markdown-content:hover {
+			scrollbar-color: var(--color-base-400) transparent;
+		}
+	}
+</style>

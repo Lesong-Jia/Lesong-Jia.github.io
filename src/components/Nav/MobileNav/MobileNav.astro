@@ -1,8 +1,11 @@
 ---
 import MobileNavDropdown from "@components/Nav/MobileNav/MobileNavDropdown.astro";
 import NavLink from "@components/Nav/NavLink.astro";
-import navData from "@config/navData.json";
+import { getNavItems } from "@config/navData.json";
 import { Icon } from "astro-icon/components";
+
+const lang = Astro.url.pathname.startsWith("/en/") ? "en" : "zh";
+const navData = getNavItems(lang);
 ---
 
 <div id="mobile-nav__container">

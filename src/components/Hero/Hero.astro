@@ -1,13 +1,15 @@
 ---
 /**
- * * Hero with background image
- * You'll want a mobile image, and a desktop image for this.
+ * Hero with background image
  */
-
 import heroImage from "@images/Cover_V3.png";
-import { Icon } from "astro-icon/components";
 import heroImageMobile from "@images/Cover_V3.png";
 import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+
+const lang = Astro.url.pathname.startsWith("/en/") ? "en" : "zh";
+const heroTitle = lang === "en" ? "\"What can be said can be said clearly.\"" : "凡可说者，皆可说清";
+const heroSubtitle = lang === "en" ? "Let's explore the boundaries of natural language in human-computer interaction" : "让我们一起探索自然人机交互的语言边界";
 ---
 
 <section id="hero" class="relative z-10 flex min-h-[100lvh] w-full flex-col">
@@ -38,15 +40,21 @@ import { Image } from "astro:assets";
 		<!-- Hero text -->
 		<div class="text-base-50 my-auto mx-auto max-w-full flex-col">
 			<h1
-				class="font-heading-1 text-4xl font-semibold text-pretty md:text-7xl md:leading-tight"
+				class:list={[
+					"font-heading-1 font-semibold text-pretty md:leading-tight",
+					lang === "en" ? "text-3xl md:text-6xl" : "text-4xl md:text-7xl",
+				]}
 			>
-				“凡可说者，皆可说清”
+				{heroTitle}
 			</h1>
 
 			<h2
-				class="mt-10 font-heading-2 text-3xl font-semibold text-pretty md:mt-8 md:text-6xl md:leading-tight"
+				class:list={[
+					"mt-10 font-heading-2 font-semibold text-pretty md:mt-8 md:leading-tight",
+					lang === "en" ? "text-2xl md:text-5xl" : "text-3xl md:text-6xl",
+				]}
 			>
-				让我们一起探索自然人机交互的语言边界
+				{heroSubtitle}
 			</h2>
 
 			<div class="mt-10 flex justify-center" aria-hidden="true">

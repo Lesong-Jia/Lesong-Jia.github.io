@@ -24,10 +24,13 @@ const {
 	heroImage,
 	noindex = false,
 } = Astro.props as Props;
+
+// 从 URL 路径中提取语言
+const lang = (Astro.url.pathname.startsWith("/en/") ? "en" : "zh") as "zh" | "en";
 ---
 
 <!doctype html>
-<html lang="en" transition:animate="fade">
+<html lang={lang} transition:animate="fade">
 	<head>
 		<BaseHead
 			type={type}

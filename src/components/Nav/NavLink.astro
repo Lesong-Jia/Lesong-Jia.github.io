@@ -1,5 +1,6 @@
 ---
 import { type navLinkItem } from "@config/navData.json";
+import { getLocalizedPath } from "@/utils/i18n";
 
 interface Props {
 	navItem: navLinkItem;
@@ -8,6 +9,14 @@ interface Props {
 
 const { navItem, class: className } = Astro.props as Props;
 const { text, link, newTab = false } = navItem;
+
+// 从 URL 路径中提取当前语言
+const currentLang = Astro.url.pathname.startsWith("/en/") ? "en" : "zh";
+
+// 为链接添加语言前缀（语言切换链接除外）
+const localizedLink = link.startsWith("/en/") || link.startsWith("/zh/") 
+	? link 
+	: getLocalizedPath(link, currentLang);
 
 // if the current page is the same as the link, we can change the styling
 ---
@@ -18,10 +27,10 @@ const { text, link, newTab = false } = navItem;
 			`nav__link--base flex w-full items-center ${className}`,
 			{
 				// styling for current active page link
-				"": Astro.url.pathname === link,
+				"": Astro.url.pathname === localizedLink || Astro.url.pathname === link,
 			},
 		]}
-		href={link}
+		href={localizedLink}
 		target={newTab ? "_blank" : ""}
 		rel={newTab ? "noopener noreferrer" : ""}
 	>

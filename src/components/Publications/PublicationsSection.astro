@@ -6,9 +6,19 @@ import siteData from "@config/siteData.json";
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
+import { getLocalizedPath } from "@/utils/i18n";
 
-const DIRECTION_ALL = "所有方向";
-const DIRECTIONS = [DIRECTION_ALL, "多模态交互", "机器人交互", "态势感知", "虚拟与增强现实"] as const;
+// 从 URL 路径中提取语言
+const lang = (Astro.url.pathname.startsWith("/en/") ? "en" : "zh") as "zh" | "en";
+const DIRECTION_ALL = lang === "en" ? "All Directions" : "所有方向";
+const DIRECTIONS = lang === "en" 
+	? [DIRECTION_ALL, "Multimodal Interaction", "Robot Interaction", "Situation Awareness", "Virtual and Augmented Reality"] as const
+	: [DIRECTION_ALL, "多模态交互", "机器人交互", "态势感知", "虚拟与增强现实"] as const;
+
+// 内容里的 direction 是中文，筛选按钮的 data-direction 随语言；用此映射使列表项与按钮一致以便客户端筛选
+const directionToFilterValue: Record<string, string> = lang === "en"
+	? { "多模态交互": "Multimodal Interaction", "机器人交互": "Robot Interaction", "态势感知": "Situation Awareness", "虚拟与增强现实": "Virtual and Augmented Reality" }
+	: { "多模态交互": "多模态交互", "机器人交互": "机器人交互", "态势感知": "态势感知", "虚拟与增强现实": "虚拟与增强现实" };
 
 // 主页只显示勾选「在主页显示」的发表；研究方向页显示全部
 const items = await getCollection("publications", ({ data }) => data.draft !== true && data.showOnHomepage === true);
@@ -49,12 +59,12 @@ function highlightAuthor(authors: string, name: string): (string | { bold: strin
 }
 ---
 
-<section id="publications" class="site-container scroll-mt-10 pt-6 pb-10 md:pt-8 md:pb-12">
+<section id="publications" class="site-container scroll-mt-10 pt-6 pb-10 md:pt-8 md:pb-12" data-direction-all={DIRECTION_ALL}>
 	<div class="max-w-6xl">
 		<!-- 标题 -->
 		<div class="mb-6 md:mb-8">
 			<h2 class="h2 text-pretty uppercase">
-				研究方向与代表性发表
+				{lang === "en" ? "Research Directions & Representative Publications" : "研究方向与代表性发表"}
 			</h2>
 		</div>
 		<!-- 五个按钮 + 查看更多：同一行 -->
@@ -71,8 +81,8 @@ function highlightAuthor(authors: string, name: string): (string | { bold: strin
 					</button>
 				))}
 			</div>
-			<a href="/publications" class="text-sm text-base-600 underline underline-offset-2 hover:text-base-900">
-				查看更多
+			<a href={getLocalizedPath("/publications", lang)} class="text-sm text-base-600 underline underline-offset-2 hover:text-base-900">
+				{lang === "en" ? "View More" : "查看更多"}
 			</a>
 		</div>
 
@@ -81,13 +91,18 @@ function highlightAuthor(authors: string, name: string): (string | { bold: strin
 			{sorted.map((entry) => {
 				const { title, venue, authors, doi, thumbnail, direction } = entry.data;
 				const doiUrl = doi ? `https://doi.org/${doi}` : "";
+				// pub-10 的图用静态路径兜底，避免 content collection 图片解析导致不显示
+				const useStaticThumb = entry.id.includes("pub-10");
+				const thumbSrc = useStaticThumb ? "/images/publications/pub10.png" : null;
 				return (
 					<li
 						class="publication-item flex items-start gap-4 p-4 md:gap-6 md:p-5"
-						data-direction={direction}
+						data-direction={directionToFilterValue[direction] ?? direction}
 					>
 						<div class="h-28 w-28 shrink-0 overflow-hidden rounded-md bg-white md:h-36 md:w-36">
-							{thumbnail ? (
+							{thumbSrc ? (
+								<img src={thumbSrc} alt="" width={288} height={288} class="h-full w-full object-contain" />
+							) : thumbnail ? (
 								<Image
 									src={thumbnail}
 									alt=""
@@ -101,7 +116,7 @@ function highlightAuthor(authors: string, name: string): (string | { bold: strin
 						</div>
 						<div class="flex min-h-28 flex-1 flex-col justify-between min-w-0 md:min-h-36">
 							<div class="pt-0">
-								<h3 class="mt-0 font-heading-2 text-lg font-semibold text-base-900 md:text-xl">
+								<h3 class="mt-0 font-heading-2 text-lg font-medium text-base-900 md:text-xl">
 									{title}
 								</h3>
 								{venue && <p class="mt-1 text-sm text-base-600">{venue}</p>}
@@ -126,31 +141,46 @@ function highlightAuthor(authors: string, name: string): (string | { bold: strin
 	</div>
 </section>
 
-<script>
-	const filters = document.querySelectorAll<HTMLButtonElement>(".publication-filter");
-	const itemEls = document.querySelectorAll<HTMLElement>(".publication-item");
+<script is:inline>
+	(function () {
+		function init() {
+			var section = document.getElementById("publications");
+			if (!section) return;
+			var directionAll = section.getAttribute("data-direction-all") || "";
+			var filters = section.querySelectorAll(".publication-filter");
+			var itemEls = section.querySelectorAll(".publication-item");
 
-	function setActive(button: HTMLButtonElement) {
-		filters.forEach((b) => b.setAttribute("data-active", b === button ? "true" : "false"));
-	}
+			function setActive(button) {
+				filters.forEach(function (b) {
+					b.setAttribute("data-active", b === button ? "true" : "false");
+				});
+			}
 
-	function filter(dir: string) {
-		const showAll = dir === "所有方向";
-		itemEls.forEach((el) => {
-			const itemDir = el.dataset.direction;
-			el.style.display = showAll || itemDir === dir ? "" : "none";
-		});
-	}
+			function filter(dir) {
+				var showAll = dir === directionAll;
+				itemEls.forEach(function (el) {
+					var itemDir = el.getAttribute("data-direction") || "";
+					el.style.display = showAll || itemDir === dir ? "" : "none";
+				});
+			}
 
-	filters.forEach((btn) => {
-		btn.addEventListener("click", () => {
-			const dir = btn.dataset.direction ?? "所有方向";
-			setActive(btn);
-			filter(dir);
-		});
-	});
+			filters.forEach(function (btn) {
+				btn.addEventListener("click", function () {
+					var dir = btn.getAttribute("data-direction") || directionAll;
+					setActive(btn);
+					filter(dir);
+				});
+			});
 
-	// 初始：所有方向选中，显示全部
-	const allBtn = document.querySelector<HTMLButtonElement>('.publication-filter[data-direction="所有方向"]');
-	if (allBtn) setActive(allBtn);
+			var allBtn = Array.prototype.find.call(filters, function (b) { return b.getAttribute("data-direction") === directionAll; });
+			if (allBtn) setActive(allBtn);
+		}
+
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", init);
+		} else {
+			init();
+		}
+		document.addEventListener("astro:page-load", init);
+	})();
 </script>

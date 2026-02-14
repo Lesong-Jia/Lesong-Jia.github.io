@@ -1,0 +1,49 @@
+---
+import { Icon } from "astro-icon/components";
+
+// 从 URL 路径中提取语言
+const currentLang = (Astro.url.pathname.startsWith("/en/") ? "en" : "zh") as "zh" | "en";
+---
+
+<li class="dropdown group relative">
+	<button
+		class="nav__link--base flex h-10 items-center gap-1"
+		type="button"
+		aria-label="Language switcher dropdown menu"
+	>
+		{currentLang === "zh" ? "中文" : "EN"}
+		<Icon name="tabler:chevron-down" aria-hidden="true" class="size-4" />
+	</button>
+	<div
+		class="dropdown-content absolute left-1/2 -translate-x-1/2 -ml-1 -mt-1 transition-all top-[90%] invisible opacity-0 z-10 text-base-900"
+	>
+		<ul
+			class="bg-white mt-3 w-fit min-w-[9rem] max-w-[18rem] rounded-none p-2 text-center"
+		>
+			<li>
+				<a
+					href={`/${currentLang === "zh" ? "en" : "zh"}${Astro.url.pathname.replace(/^\/(zh|en)/, "")}`}
+					class="nav__link--base flex w-full items-center justify-center"
+					data-lang-switch
+				>
+					{currentLang === "zh" ? "English" : "中文"}
+				</a>
+			</li>
+		</ul>
+	</div>
+</li>
+
+<style>
+	.dropdown {
+		&:hover > .dropdown-content,
+		&:focus-within > .dropdown-content {
+			transition:
+				opacity 0.15s ease-out,
+				visibility 0.15s ease-out,
+				top 0.15s ease-out;
+			visibility: visible;
+			top: 100%;
+			opacity: 100%;
+		}
+	}
+</style>

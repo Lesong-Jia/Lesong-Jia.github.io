@@ -1,6 +1,7 @@
 ---
 title: "论文 Aligning Task Goals before Execution 被 HRI 2026 接收"
 description: "我们的论文 Aligning Task Goals before Execution: Insights from Diverse User Groups into Human–Robot Communication in Domestic Settings 已获机器人交互顶会 HRI 2026 接收。作者：Lesong Jia, Yang Ye, Breelyn Styler, Na Du。"
+descriptionEn: "Our paper Aligning Task Goals before Execution: Insights from Diverse User Groups into Human–Robot Communication in Domestic Settings has been accepted at HRI 2026."
 heroImage: ./cover.png
 date: "2025-12-01"
 order: 4

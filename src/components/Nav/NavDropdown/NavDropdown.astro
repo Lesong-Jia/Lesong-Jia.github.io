@@ -9,6 +9,23 @@ interface Props {
 }
 
 const { navItem, class: className } = Astro.props as Props;
+
+// 为语言切换链接动态生成路径
+const processedDropdown = navItem.dropdown.map((item) => {
+	// 如果是语言切换链接（/en/ 或 /zh/），生成当前页面的对应语言版本
+	if (item.link === "/en/" || item.link === "/zh/") {
+		const targetLang = item.link === "/en/" ? "en" : "zh";
+		const currentPath = Astro.url.pathname;
+		// 移除当前语言前缀
+		const pathWithoutLang = currentPath.replace(/^\/(zh|en)/, "");
+		// 生成目标语言路径
+		const targetPath = pathWithoutLang === "/" || pathWithoutLang === "" 
+			? `/${targetLang}/` 
+			: `/${targetLang}${pathWithoutLang}`;
+		return { ...item, link: targetPath };
+	}
+	return item;
+});
 ---
 
 <!-- non-mobile dropdown menu -->
@@ -27,7 +44,7 @@ const { navItem, class: className } = Astro.props as Props;
 		<ul
 			class="bg-white mt-3 w-fit min-w-[9rem] max-w-[18rem] rounded-none p-2 text-center"
 		>
-			{navItem.dropdown.map((dropdownItem) => (
+			{processedDropdown.map((dropdownItem) => (
 				<NavLink navItem={dropdownItem} class="justify-center" />
 			))}
 		</ul>
